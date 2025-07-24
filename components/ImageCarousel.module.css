@@ -1,0 +1,27 @@
+.swiper-button-next,
+.swiper-button-prev {
+  color: #111 !important;
+  z-index: 10 !important;
+  display: flex !important;
+  opacity: 1 !important;
+  width: 44px !important;
+  height: 44px !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-main-image {
+  width: 400px;
+  height: 400px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #f8f8f8;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.3s;
+  cursor: zoom-in;
+}
+.carousel-main-image:hover {
+  transform: scale(1.25);
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}

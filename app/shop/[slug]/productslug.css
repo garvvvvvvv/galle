@@ -1,0 +1,71 @@
+.product-detail-page {
+    gap: 50px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    box-sizing: border-box;
+}
+
+.buy-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%;
+
+}
+
+.fragrance-notes {
+    line-height: 1.6;
+}
+
+.product-info {
+    flex: 1 1 400px;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.add-to-cart {
+    margin: 0 auto;
+    background: #8B2E2E;
+    color: #fff;
+    min-width: 300px;
+    width: 100%;
+    text-align: center;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    margin-top: 16px;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .product-detail-page {
+        flex-direction: column;
+        margin: 10px auto;
+        align-items: center;
+        gap: 20px;
+    }
+
+
+    .buy-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+        width: 100%;
+        margin: auto;
+
+    }
+}

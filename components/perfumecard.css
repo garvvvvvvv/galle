@@ -1,0 +1,51 @@
+.perfumeCard {
+  width: 100%;
+  max-width: 100%; /* remove 300px limit */
+  padding: 1rem;
+  border: 1px solid #241B19;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+
+.perfumeCard img{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.perfumeName{
+    font-weight: 500;
+    font-family: PlayfairDisplay;
+}
+
+.perfumeDescription{
+    color: #555;
+    font-family: Inter;
+    font-weight: 200;
+    text-align: center;
+}
+
+.perfumeSize,
+.perfumePrice{
+    font-family: Inter;
+    font-weight: 200;
+    text-align: center;
+}
+
+.addToCartButton{
+    background-color: #241B19;
+    color: rgb(255, 255, 255);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addToCartButton:hover{
+    background-color: #3B2A25;
+}

@@ -1,0 +1,120 @@
+nav {
+  background-color: #ffeedc;
+  padding: 0 5rem;
+}
+
+h1 {
+  font-family: 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  position: relative;
+  font-family: 'Jost', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hover underline effect */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 60%;
+  height: 2px;
+  background-color: #d2beab;
+  transition: transform 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 4.5rem;
+  padding: 1.5rem;
+}
+
+.shop-now{
+    border: 2px solid #d2beab;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 115px;
+    text-align: center;
+    margin: 0;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-family: 'Jost', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #241B19;
+}
+
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+@media (max-width: 1100px) {
+  .hamburger {
+    display: flex;
+  }
+  
+
+  .navbar {
+  display: flex;
+  justify-content: space-between !important;
+  position: relative;
+}
+
+  .nav-links a{
+  padding-inline: 5rem;
+}
+  
+  .nav-links {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background-color: #ffeedc;
+  width: 100vw;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 2rem;
+  z-index: 1000;
+  padding: 2rem 0;
+  }
+
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+  background-color: #ffeedc;
+  padding: 0.2rem 1rem;
+}
+
+}
