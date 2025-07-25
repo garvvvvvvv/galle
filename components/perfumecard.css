@@ -49,3 +49,24 @@
 .addToCartButton:hover{
     background-color: #3B2A25;
 }
+
+@media (max-width: 700px) {
+  .bestseller-slider {
+    display: flex !important;
+    flex-direction: row;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+  .bestseller-slider .perfumeCard {
+    min-width: 78vw;
+    max-width: 82vw;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    margin: 0 0.5rem;
+    box-shadow: 0 2px 12px rgba(80,60,40,0.08);
+  }
+}

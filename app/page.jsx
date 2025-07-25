@@ -234,7 +234,18 @@ export default function Home() {
         <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#241B19', marginBottom: 24, textAlign: 'center' }}>
           Bestsellers
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 32 }}>
+        <div
+          className="bestseller-slider"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 32,
+            overflowX: 'auto',
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+            paddingBottom: 8
+          }}
+        >
           <PerfumeCard title="GALLE WINSEN" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_2a9069f2.jpg?updatedAt=1751363008436" />
           <PerfumeCard title="GALLE ADORE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_3ce2c1a8.jpg?updatedAt=1751363008373" />
           <PerfumeCard title="GALLE ENTICE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.27_955a0e06.jpg?updatedAt=1751363008393" />
