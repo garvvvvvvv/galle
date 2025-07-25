@@ -158,8 +158,7 @@ export default function ProductPage({ params }) {
         </div>
       </div>
     </div>
-          <ReviewSection /><br />
-          <Testimonials />
+          <ReviewSection /><br />   
     </>
   );
 }

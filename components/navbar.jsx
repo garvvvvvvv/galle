@@ -18,14 +18,14 @@ const Navbar = () => {
         <li><Link href='/shop' onClick={handleLinkClick}>SHOP</Link></li>
         <li><Link href='/about' onClick={handleLinkClick}>ABOUT</Link></li>
         <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
+        <li><Link href='/auth' onClick={handleLinkClick}>SIGN IN</Link></li>
+        <li><Link href='/account' onClick={handleLinkClick}>MY ACCOUNT</Link></li>
       </ul>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <Link className='shop-now' href='/shop'>SHOP NOW</Link>
         <Link href='/checkout' className='cart-navbar-btn' aria-label='Go to Cart' style={{ display: 'flex', alignItems: 'center', color: '#241B19', fontSize: '1.7rem', marginLeft: '8px' }}>
           <FaShoppingCart />
         </Link>
-        <Link href='/auth' style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginLeft: '8px', textDecoration: 'none' }}>Sign In</Link>
-        <Link href='/account' style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginLeft: '8px', textDecoration: 'none' }}>Account</Link>
       </div>
       <button
         className="hamburger"
