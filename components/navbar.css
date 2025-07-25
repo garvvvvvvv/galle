@@ -12,6 +12,10 @@ h1 {
   align-items: center;
   justify-content: space-between;
   margin: 0;
+  min-height: 54px;
+  height: 70px;
+  padding: 0 2rem;
+  font-size: 1.13rem;
 }
 
 .nav-links a {
@@ -74,17 +78,78 @@ h1 {
   z-index: 1100;
 }
 
+.logo img {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.mobile-brand {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.mobile-galle-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #241B19;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+.mobile-galle-tagline {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  color: #8B2E2E;
+  font-weight: 400;
+  margin-top: -2px;
+  letter-spacing: 0.08em;
+}
+
+.mobile-cart-link {
+  display: none;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.desktop-cart-btn {
+  display: flex;
+}
+
+/* Responsive styles */
 @media (max-width: 1100px) {
   .hamburger {
     display: flex;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-right: 8px;
   }
   
 
   .navbar {
   display: flex;
+  align-items: center;
   justify-content: space-between !important;
-  position: relative;
+  margin: 0;
+  min-height: 60px;
+  height: 60px;
+  padding: 0 2rem;
+  font-size: 1.13rem;
+   position: relative;
 }
+
 
   .nav-links a{
   padding-inline: 5rem;
@@ -111,10 +176,54 @@ h1 {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   nav {
-  background-color: #ffeedc;
-  padding: 0.2rem 1rem;
-}
+    background-color: #ffeedc;
+    padding: 0.2rem 1rem;
+  }
 
+  .logo img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .shop-now {
+    display: none !important;
+  }
+
+  .navbar-right {
+    gap: 0;
+  }
+
+  .desktop-cart-btn {
+    display: none !important;
+  }
+
+  .mobile-brand {
+    display: flex !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: transparent;
+    pointer-events: none;
+    min-width: 70px;
+  }
+
+  .mobile-cart-link {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-links {
+    /* ...existing code... */
+  }
+
+  .nav-links.active .mobile-cart-link {
+    display: flex !important;
+  }
 }
