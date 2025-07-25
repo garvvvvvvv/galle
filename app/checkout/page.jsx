@@ -68,31 +68,50 @@ export default function CheckoutPage() {
                 description: 'Order Checkout',
                 order_id: data.orderId,
                 handler: async function (response) {
-                    // 3. Save order to Supabase
-                    let userId = undefined;
+                    // 3. Ensure user is signed in and profile is up-to-date
+                    const { data: { user }, error: userError } = await supabase.auth.getUser();
+                    if (userError || !user) {
+                      setError("You're not signed in. Please sign in to place an order.");
+                      setLoading(false);
+                      return;
+                    }
+
+                    // Optional: Ensure user profile is complete
                     try {
-                        const { data: userData } = await supabase.auth.getUser();
-                        userId = userData?.user?.id;
-                    } catch {}
+                      const { data: profileData, error: profileError } = await supabase.rpc('upsert_user_profile', {
+                        input_first_name: form.name, // Adjust if you have separate first/last name
+                        input_email: form.email,
+                        input_phone: form.phone,
+                        input_country_code: form.country_code,
+                        input_city: form.city
+                      });
+                      if (profileError) {
+                        console.warn('Could not update profile:', profileError);
+                      }
+                    } catch (err) {
+                      console.warn('Profile update attempt failed:', err);
+                    }
+
                     // Ensure all fields are correct types for Supabase
                     const orderPayload = {
-                        name: form.name,
-                        email: form.email,
-                        address: form.address,
-                        phone: form.phone,
-                        country_code: form.country_code,
-                        pincode: form.pincode,
-                        city: form.city,
-                        cart: JSON.stringify(cart), // must be string for jsonb
-                        total: Number(total), // ensure numeric
-                        payment_id: String(response.razorpay_payment_id),
-                        order_id: String(response.razorpay_order_id),
-                        status: 'Placed',
+                      name: form.name,
+                      email: form.email,
+                      address: form.address,
+                      phone: form.phone,
+                      country_code: form.country_code,
+                      pincode: form.pincode,
+                      city: form.city,
+                      cart: JSON.stringify(cart), // must be string for jsonb
+                      total: Number(total), // ensure numeric
+                      payment_id: String(response.razorpay_payment_id),
+                      order_id: String(response.razorpay_order_id),
+                      status: 'Placed',
+                      user_id: user.id
                     };
-                    if (userId) orderPayload.user_id = userId;
+                    console.log("Supabase Auth User ID:", user.id);
                     const { error: orderError } = await supabase.from('orders').insert([orderPayload]);
                     if (orderError) {
-                        setError('Order saved but failed to save in database: ' + orderError.message);
+                      setError('Order saved but failed to save in database: ' + orderError.message);
                     }
                     // 4. Send order confirmation email
                     try {

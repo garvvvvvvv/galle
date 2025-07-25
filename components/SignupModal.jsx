@@ -39,25 +39,6 @@ const SignupModal = () => {
     // (Removed duplicate/invalid error declaration)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 0. Check if email already exists in users or subscribers
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', form.email)
-      .maybeSingle();
-    if (existingUser) {
-      alert('Email already exists. Please log in.');
-      return;
-    }
-    const { data: existingSub } = await supabase
-      .from('subscribers')
-      .select('id')
-      .eq('email', form.email)
-      .maybeSingle();
-    if (existingSub) {
-      alert('Email already exists. Please log in.');
-      return;
-    }
     // 1. Sign up user with Supabase Auth
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: form.email,
@@ -84,8 +65,8 @@ const SignupModal = () => {
       userId = sessionData?.session?.user?.id;
     }
     if (userId) {
-      // Save to users table
-      const { error: userTableError } = await supabase.from('users').insert([
+      // Save to users table (upsert to avoid unique constraint errors)
+      const { error: userTableError } = await supabase.from('users').upsert([
         {
           id: userId,
           email: form.email,
@@ -95,9 +76,10 @@ const SignupModal = () => {
           country_code: form.country_code,
           city: form.city
         }
-      ]);
+      ], { onConflict: 'id' });
       if (userTableError) {
         alert('User profile save failed: ' + userTableError.message);
+        console.error('Debug: User profile save failed:', userTableError);
         return;
       }
       // Save to subscribers table
@@ -113,89 +95,23 @@ const SignupModal = () => {
       ]);
       if (subTableError) {
         alert('Subscriber save failed: ' + subTableError.message);
+        console.error('Debug: Subscriber save failed:', subTableError);
         return;
       }
     }
     setSubmitted(true);
     alert('Thank you! Please check your email to confirm your account.');
     handleClose();
-            fontSize: '1.5rem',
-            color: '#8B2E2E',
-            cursor: 'pointer',
-            fontWeight: 600,
-          }}
-        >
-          ×
-        </button>
-        <h2 style={{ fontWeight: 700, fontSize: '1.5rem', marginBottom: '0.5rem', color: '#8B2E2E' }}>Join Our Tribe</h2>
-        <p style={{ fontSize: '1.08rem', color: '#412a1f', marginBottom: '1.2rem', fontWeight: 400 }}>
-          Sign up to receive exclusive offers, tips, and product drops!
-        </p>
-        {!submitted ? (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem', alignItems: 'center' }}>
-            <input name="first_name" value={form.first_name} onChange={handleChange} required placeholder="First Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <input name="last_name" value={form.last_name} onChange={handleChange} required placeholder="Last Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <input name="phone" value={form.phone} onChange={handleChange} required placeholder="Phone Number" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <select name="country_code" value={form.country_code} onChange={handleChange} required style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none', background: '#fff' }}>
-              <option value="">Country Code</option>
-              <option value="+91">India (+91)</option>
-              <option value="+1">United States (+1)</option>
-              <option value="+44">United Kingdom (+44)</option>
-              <option value="+61">Australia (+61)</option>
-              <option value="+81">Japan (+81)</option>
-              <option value="+49">Germany (+49)</option>
-              <option value="+33">France (+33)</option>
-    handleClose();
-  };
+  }
 
   if (!show) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      background: 'rgba(40, 30, 20, 0.18)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      transition: 'opacity 0.3s',
-    }}>
-      <div style={{
-        background: '#fff',
-        borderRadius: '18px',
-        boxShadow: '0 8px 32px rgba(80, 60, 40, 0.18)',
-        padding: '2.2rem 1.5rem 1.5rem 1.5rem',
-        maxWidth: 340,
-        width: '90vw',
-        textAlign: 'center',
-        position: 'relative',
-        fontFamily: 'Inter, Arial, sans-serif',
-      }}>
-        <button
-          onClick={handleClose}
-          aria-label="Close"
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            background: 'none',
-            border: 'none',
-            fontSize: '1.5rem',
-            color: '#8B2E2E',
-            cursor: 'pointer',
-            fontWeight: 600,
-          }}
-        >
-          ×
-        </button>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(40, 30, 20, 0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'opacity 0.3s' }}>
+      <div style={{ background: '#fff', borderRadius: '18px', boxShadow: '0 8px 32px rgba(80, 60, 40, 0.18)', padding: '2.2rem 1.5rem 1.5rem 1.5rem', maxWidth: 340, width: '90vw', textAlign: 'center', position: 'relative', fontFamily: 'Inter, Arial, sans-serif' }}>
+        <button onClick={handleClose} aria-label="Close" style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: '1.5rem', color: '#8B2E2E', cursor: 'pointer', fontWeight: 600 }}>×</button>
         <h2 style={{ fontWeight: 700, fontSize: '1.5rem', marginBottom: '0.5rem', color: '#8B2E2E' }}>Join Our Tribe</h2>
-        <p style={{ fontSize: '1.08rem', color: '#412a1f', marginBottom: '1.2rem', fontWeight: 400 }}>
-          Sign up to receive exclusive offers, tips, and product drops!
-        </p>
+        <p style={{ fontSize: '1.08rem', color: '#412a1f', marginBottom: '1.2rem', fontWeight: 400 }}>Sign up to receive exclusive offers, tips, and product drops!</p>
         {!submitted ? (
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem', alignItems: 'center' }}>
             <input name="first_name" value={form.first_name} onChange={handleChange} required placeholder="First Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
@@ -273,9 +189,7 @@ const SignupModal = () => {
             <button type="submit" style={{ background: '#8B2E2E', color: '#fff', border: 'none', borderRadius: '8px', padding: '0.7rem 1.5rem', fontWeight: 600, fontSize: '1.08rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(80, 60, 40, 0.08)' }}>Subscribe</button>
           </form>
         ) : (
-          <div style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginTop: '1.2rem' }}>
-            Thank you for subscribing!
-          </div>
+          <div style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginTop: '1.2rem' }}>Thank you for subscribing!</div>
         )}
       </div>
     </div>
@@ -283,3 +197,4 @@ const SignupModal = () => {
 }
 
 export default SignupModal;
+
