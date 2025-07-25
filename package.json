@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",
+    "imagekitio-react": "^4.3.0",
     "next": "15.3.4",
     "nodemailer": "^7.0.5",
     "razorpay": "^2.9.6",
