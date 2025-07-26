@@ -193,51 +193,132 @@ function TestimonialsCarousel() {
 }
 
 // --- FeatureCardSlider (Swiper horizontal slider) ---
+
+
 function FeatureCardSlider() {
   const features = [
-    { icon: "natural-ingredients.svg", title: "Natural Ingredients", desc: "Only the purest, safest botanicals." },
-    { icon: "cruelty-free.svg", title: "Cruelty-Free", desc: "Never tested on animals." },
-    { icon: "non-carcinogenic.svg", title: "Non-Carcinogenic", desc: "No harmful chemicals or toxins." },
-    { icon: "paraben-free.svg", title: "Paraben-Free", desc: "Gentle and safe for all skin types." },
-    { icon: "silicone-free.svg", title: "Silicone-Free", desc: "Clean beauty, always." }
+    {
+      icon: "natural-ingredients.svg",
+      title: "Natural Ingredients",
+      desc: "Only the purest, safest botanicals."
+    },
+    {
+      icon: "cruelty-free.svg",
+      title: "Cruelty-Free",
+      desc: "Never tested on animals."
+    },
+    {
+      icon: "non-carcinogenic.svg",
+      title: "Non-Carcinogenic",
+      desc: "No harmful chemicals or toxins."
+    },
+    {
+      icon: "paraben-free.svg",
+      title: "Paraben-Free",
+      desc: "Gentle and safe for all skin types."
+    },
+    {
+      icon: "silicone-free.svg",
+      title: "Silicone-Free",
+      desc: "Clean beauty, always."
+    }
   ];
+
   return (
-    <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: 24,
-      justifyContent: 'center',
-      background: '#fff7f0',
-      borderRadius: 18,
-      boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
-      padding: '2rem 1.2rem',
-      minWidth: 220,
-      maxWidth: 1200,
-      margin: '0 auto',
-      alignItems: 'center'
-    }}>
-      {features.map((f, i) => (
-        <div key={i} style={{
-          background: '#fff',
-          borderRadius: 16,
-          boxShadow: '0 2px 12px rgba(80,60,40,0.06)',
-          padding: '2rem 1.5rem',
-          minWidth: 180,
-          maxWidth: 220,
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 12
-        }}>
-          <img src={f.icon} alt={f.title} style={{ width: 48, height: 48, marginBottom: 10 }} />
-          <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#8B2E2E', margin: 0 }}>{f.title}</h3>
-          <p style={{ color: '#412a1f', fontSize: '1rem', margin: 0 }}>{f.desc}</p>
-        </div>
-      ))}
-    </div>
+    <section
+      style={{
+        maxWidth: 1400,
+        margin: "0 auto 3rem auto",
+        padding: "0 1rem"
+      }}
+    >
+      <h2
+        style={{
+          fontFamily: "Playfair Display",
+          fontWeight: 700,
+          fontSize: "2rem",
+          color: "#241B19",
+          marginBottom: 24,
+          textAlign: "center"
+        }}
+      >
+        Why Choose Us
+      </h2>
+
+      <div
+        className="feature-slider"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))"
+        }}
+      >
+        {features.map((f, i) => (
+          <div
+            key={i}
+            className="feature-card"
+            style={{
+              background: "#fff7f0",
+              borderRadius: 16,
+              boxShadow: "0 2px 12px rgba(80,60,40,0.07)",
+              padding: "2rem 1.5rem",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              minWidth: 220,
+              scrollSnapAlign: "start"
+            }}
+          >
+            <img
+              src={f.icon}
+              alt={f.title}
+              style={{ width: 48, height: 48, marginBottom: 10 }}
+            />
+            <h3
+              style={{
+                fontWeight: 700,
+                fontSize: "1.1rem",
+                color: "#8B2E2E",
+                margin: 0
+              }}
+            >
+              {f.title}
+            </h3>
+            <p
+              style={{
+                color: "#412a1f",
+                fontSize: "1rem",
+                margin: 0,
+                marginTop: 8
+              }}
+            >
+              {f.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <style jsx>{`
+        @media (max-width: 900px) {
+          .feature-slider {
+            display: flex !important;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+          }
+
+          .feature-card {
+            flex: 0 0 auto;
+          }
+        }
+      `}</style>
+    </section>
   );
 }
+
+
+
 
 // --- BlogPageSideContent (for blog page left/right white space) ---
 function BlogPageSideContent() {
