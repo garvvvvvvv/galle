@@ -1,19 +1,18 @@
 "use client";
+import React, { useState } from 'react';
 import products from '../../../data/product';
 import './productslug.css';
 import ProductCarousel from '@/components/ProductCarousel';
-import { useState } from 'react';
 import { useCart } from '@/components/CartContext';
 import Link from 'next/link';
 import ReviewSection from '@/components/ReviewSection';
 import Testimonials from '@/components/Testimonials';
 
-import React from 'react';
 export default function ProductPage({ params }) {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const actualParams = React.use(params);
-  const product = products.find((p) => p.slug === actualParams.slug);
+  const resolvedParams = React.use(params);
+  const product = products.find((p) => p.slug === resolvedParams.slug);
   if (!product) return <div>Product not found</div>;
   const gallery = product.gallery || [product.image];
 

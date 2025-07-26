@@ -7,11 +7,11 @@ import ImageCarousel from "@/components/ImageCarousel";
 import PerfumeCard from "@/components/perfumecard";
 import Link from "next/link";
 import "swiper/css";
-
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y } from "swiper/modules";
+import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
+
 // --- Testimonials data ---
 const testimonials = [
   {
@@ -165,13 +165,14 @@ function FeatureCard({ icon, title, desc }) {
 function TestimonialsCarousel() {
   return (
     <Swiper
-      modules={[Pagination, A11y]}
+      modules={[Pagination, A11y, Autoplay]}
       pagination={{ clickable: true }}
       spaceBetween={32}
       slidesPerView={1}
       breakpoints={{
         700: { slidesPerView: 2 },
       }}
+      autoplay={{ delay: 2000, disableOnInteraction: false }}
       className="testimonials-carousel"
       style={{ maxWidth: 900, margin: "0 auto" }}
     >
@@ -191,16 +192,76 @@ function TestimonialsCarousel() {
   );
 }
 
-// --- BlogCarousel (Swiper, responsive) ---
-// ...existing code...
+// --- FeatureCardSlider (Swiper horizontal slider) ---
+function FeatureCardSlider() {
+  const features = [
+    { icon: "natural-ingredients.svg", title: "Natural Ingredients", desc: "Only the purest, safest botanicals." },
+    { icon: "cruelty-free.svg", title: "Cruelty-Free", desc: "Never tested on animals." },
+    { icon: "non-carcinogenic.svg", title: "Non-Carcinogenic", desc: "No harmful chemicals or toxins." },
+    { icon: "paraben-free.svg", title: "Paraben-Free", desc: "Gentle and safe for all skin types." },
+    { icon: "silicone-free.svg", title: "Silicone-Free", desc: "Clean beauty, always." }
+  ];
+  return (
+    <div style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 24,
+      justifyContent: 'center',
+      background: '#fff7f0',
+      borderRadius: 18,
+      boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
+      padding: '2rem 1.2rem',
+      minWidth: 220,
+      maxWidth: 1200,
+      margin: '0 auto',
+      alignItems: 'center'
+    }}>
+      {features.map((f, i) => (
+        <div key={i} style={{
+          background: '#fff',
+          borderRadius: 16,
+          boxShadow: '0 2px 12px rgba(80,60,40,0.06)',
+          padding: '2rem 1.5rem',
+          minWidth: 180,
+          maxWidth: 220,
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 12
+        }}>
+          <img src={f.icon} alt={f.title} style={{ width: 48, height: 48, marginBottom: 10 }} />
+          <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#8B2E2E', margin: 0 }}>{f.title}</h3>
+          <p style={{ color: '#412a1f', fontSize: '1rem', margin: 0 }}>{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-
-
-// ...existing code...
+// --- BlogPageSideContent (for blog page left/right white space) ---
+function BlogPageSideContent() {
+  return (
+    <div style={{
+      background: '#fff7f0',
+      borderRadius: 18,
+      boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
+      padding: '2rem 1.2rem',
+      minWidth: 220,
+      maxWidth: 260,
+      margin: '0 1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 18
+    }}>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="home-page" style={{ background: 'var(--bg-page, #FDF9EF)' }}>
+    <div className="home-page" style={{ background: 'var(--bg-page, #FDF9EF)', overflowX: 'hidden' }}>
       {/* 1. Carousel at the top */}
       <ImageCarousel />
 
@@ -220,13 +281,9 @@ export default function Home() {
         <a href="/shop" style={{ background: '#8B2E2E', color: '#fff', padding: '0.9rem 2.2rem', borderRadius: 10, fontWeight: 700, fontSize: '1.15rem', textDecoration: 'none', boxShadow: '0 2px 8px rgba(80,60,40,0.10)' }}>Shop Now</a>
       </section>
 
-      {/* 3. Features Grid */}
-      <section style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', margin: '2.5rem 0' }}>
-        <FeatureCard icon="natural-ingredients.svg" title="Natural Ingredients" desc="Only the purest, safest botanicals." />
-        <FeatureCard icon="cruelty-free.svg" title="Cruelty-Free" desc="Never tested on animals." />
-        <FeatureCard icon="non-carcinogenic.svg" title="Non-Carcinogenic" desc="No harmful chemicals or toxins." />
-        <FeatureCard icon="paraben-free.svg" title="Paraben-Free" desc="Gentle and safe for all skin types." />
-        <FeatureCard icon="silicone-free.svg" title="Silicone-Free" desc="Clean beauty, always." />
+      {/* 3. Features Grid (now horizontal slider) */}
+      <section style={{ maxWidth: 1200, margin: '2.5rem auto', padding: '0 1rem' }}>
+        <FeatureCardSlider />
       </section>
 
       {/* 4. Bestsellers Section */}
@@ -253,8 +310,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Blog Carousel */}
-      <BlogCarousel />
+      {/* 5. Blog Carousel with side content */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 24, maxWidth: 1400, margin: '0 auto' }}>
+        {/* <BlogPageSideContent /> */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <BlogCarousel />
+        </div>
+        {/* <BlogPageSideContent /> */}
+      </div>
 
       {/* 6. Testimonials Carousel */}
       <section style={{ background: '#fff7f0', padding: '3rem 0', borderRadius: 24, margin: '0 auto 3rem auto', maxWidth: 1100, boxShadow: '0 2px 16px rgba(80,60,40,0.07)' }}>
@@ -274,3 +337,13 @@ export default function Home() {
     </div>
   );
 }
+
+
+      // <h3 style={{ fontFamily: 'Playfair Display', fontWeight: 700, color: '#8B2E2E', fontSize: '1.1rem' }}>GALLE Tips</h3>
+      // <ul style={{ padding: 0, margin: 0, listStyle: 'none', fontSize: '1rem', color: '#412a1f', fontWeight: 400 }}>
+      //   <li>🌸 How to make your perfume last longer</li>
+      //   <li>💧 Store fragrances away from sunlight</li>
+      //   <li>🎁 Gift ideas for every occasion</li>
+      //   <li>🧴 Layer scents for a unique blend</li>
+      // </ul>
+      // <Link href="/shop" style={{ background: '#8B2E2E', color: '#fff', borderRadius: 8, padding: '0.7rem 1.2rem', fontWeight: 600, textDecoration: 'none', marginTop: 12 }}>Shop Now</Link>

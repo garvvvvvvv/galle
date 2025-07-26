@@ -126,104 +126,440 @@ h1 {
   display: flex;
 }
 
-/* Responsive styles */
-@media (max-width: 1100px) {
-  .hamburger {
-    display: flex;
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding-right: 8px;
-  }
-  
-
-  .navbar {
+/* New navbar layout styles */
+.navbar-top-row {
   display: flex;
   align-items: center;
-  justify-content: space-between !important;
-  margin: 0;
-  min-height: 60px;
-  height: 60px;
-  padding: 0 2rem;
-  font-size: 1.13rem;
-   position: relative;
+  justify-content: space-between;
+  padding: 0.7rem 2rem 0.2rem 2rem;
+  background: #ffeedc;
 }
 
-
-  .nav-links a{
-  padding-inline: 5rem;
+.navbar-logo-tagline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-  
-  .nav-links {
-  display: none;
-  position: absolute;
-  top: 60px;
-  left: 0;
-  background-color: #ffeedc;
-  width: 100vw;
+
+.navbar-brand {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem;
-  gap: 2rem;
-  z-index: 1000;
-  padding: 2rem 0;
-  }
+}
 
-  .nav-links.active {
-    display: flex;
-    flex-direction: column;
+.navbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #241B19;
+}
+
+.navbar-tagline {
+  font-size: 1rem;
+  color: #8B2E2E;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-links-row {
+  display: flex;
+  justify-content: center;
+  background: #ffeedc;
+  border-bottom: 1px solid #d2beab;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  padding: 0.7rem 0;
+  list-style: none;
+  font-size: 1.13rem;
+}
+
+.navbar-mobile-row {
+  display: none;
+}
+
+/* Search bar styles */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #d2beab;
+  padding: 0.2rem 0.7rem;
+  margin-right: 0.5rem;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  min-width: 120px;
+}
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
+.search-bar.mobile {
+  min-width: 0;
+  width: 100%;
+  margin-right: 0;
+}
+@media (max-width: 700px) {
+  .search-bar {
+    width: 100%;
+    margin-right: 0;
+    padding: 0.2rem 0.3rem;
+  }
+  .search-bar input {
+    min-width: 60px;
+    font-size: 0.95rem;
   }
 }
 
-@media (max-width: 700px) {
-  nav {
-    background-color: #ffeedc;
-    padding: 0.2rem 1rem;
-  }
+/* Offers strip */
+.offers-strip {
+  width: 100vw;
+  background: #8B2E2E;
+  color: #fff;
+  text-align: center;
+  font-size: 1.08rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  letter-spacing: 0.04em;
+  z-index: 1200;
+}
 
-  .logo img {
-    width: 32px !important;
-    height: 32px !important;
-  }
+/* Outer navbar container for spacing */
+.navbar-outer {
+  background-color: #ffeedc;
+  box-shadow: 0 2px 12px rgba(80,60,40,0.07);
+  position: relative;
+  z-index: 100;
+}
 
-  .shop-now {
-    display: none !important;
-  }
+/* Top row: logo, tagline, actions */
+.navbar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 2rem 0.2rem 2rem;
+  background: #ffeedc;
+}
 
-  .navbar-right {
-    gap: 0;
-  }
+/* Brand section */
+.navbar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .desktop-cart-btn {
-    display: none !important;
-  }
+.navbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #241B19;
+}
 
-  .mobile-brand {
-    display: flex !important;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    background: transparent;
-    pointer-events: none;
-    min-width: 70px;
-  }
+.navbar-tagline {
+  font-size: 1.08rem;
+  color: #8B2E2E;
+  font-weight: 400;
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
 
-  .mobile-cart-link {
-    display: flex !important;
-    justify-content: center;
+/* Actions: account, cart */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Second row: links and search */
+.navbar-links-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  background: #ffeedc;
+  border-bottom: 1px solid #d2beab;
+  padding: 0.5rem 2rem;
+}
+
+/* Search bar styles */
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 40px;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.7rem;
+  color: #8B2E2E;
+  font-size: 1.15rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.search-btn:hover {
+  background: #f7ece6;
+}
+
+.search-bar-expanded input {
+  border: 1px solid #d2beab;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  background: #fff;
+  min-width: 220px;
+  outline: none;
+}
+
+.search-bar-expanded {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Suggestions dropdown */
+.search-suggestions-dropdown {
+  position: absolute;
+  top: 2.5rem;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #d2beab;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(80,60,40,0.10);
+  z-index: 200;
+  padding: 0.5rem 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.search-suggestion {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #f3e5d7;
+  transition: background 0.2s;
+}
+
+.search-suggestion:hover {
+  background: #f7ece6;
+}
+
+/* Perfume card fallback */
+.perfume-card {
+  width: 120px;
+  background: #f7ece6;
+  border-radius: 10px;
+  padding: 0.7rem;
+  box-shadow: 0 2px 8px rgba(80,60,40,0.07);
+  cursor: pointer;
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfume-card img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.perfume-card .title {
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.perfume-card .desc {
+  font-size: 0.9rem;
+  color: #8B2E2E;
+}
+
+/* Mobile styles */
+.navbar-mobile-row {
+  display: none;
+}
+
+.mobile-nav-menu {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .navbar-top-row,
+  .navbar-links-row {
+    display: none;
+  }
+  .navbar-mobile-row {
+    display: flex;
     align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    background: #ffeedc;
+    width: 100%;
+  }
+  .navbar-mobile-row > .mobile-logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .navbar-mobile-row > .mobile-center {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
   }
 
+  nav {
+  background-color: #ffeedc;
+  padding: 0rem;
+}
+  .navbar-mobile-row > .mobile-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.7rem;
+  }
+  .navbar-mobile-row .logo img {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  .navbar-mobile-row .navbar-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #241B19;
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+  }
+  .navbar-mobile-row .navbar-tagline {
+    font-size: 0.85rem;
+    color: #8B2E2E;
+    font-weight: 400;
+    margin-top: 2px;
+    font-family: 'Jost', sans-serif;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .mobile-nav-menu {
+    display: block;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    background: #ffeedc;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(80,60,40,0.07);
+    padding: 2rem 0 1rem 0;
+  }
+  .mobile-nav-menu .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 1.08rem;
+  }
+  .mobile-nav-menu .cart-navbar-btn {
+    font-size: 1.7rem;
+    margin-left: 0;
+  }
+  .search-bar-expanded input {
+    min-width: 120px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 1100px) {
+  .navbar-top-row,
+  .navbar-links-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.7rem 1rem;
+  }
+  .navbar-title {
+    font-size: 1.3rem;
+  }
+  .navbar-tagline {
+    font-size: 0.95rem;
+  }
   .nav-links {
-    /* ...existing code... */
+    gap: 1.3rem;
+    font-size: 1rem;
   }
+  .navbar-actions {
+    gap: 1rem;
+  }
+}
 
-  .nav-links.active .mobile-cart-link {
-    display: flex !important;
+@media (max-width: 900px) {
+  .offers-strip {
+    font-size: 0.95rem;
+    padding: 0.4rem 0;
   }
+  .navbar-top-row,
+  .navbar-links-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.7rem 0.5rem;
+  }
+  .navbar-title {
+    font-size: 1.1rem;
+  }
+  .navbar-tagline {
+    font-size: 0.85rem;
+  }
+  .nav-links {
+    gap: 0.7rem;
+    font-size: 0.95rem;
+  }
+  .navbar-actions {
+    gap: 0.7rem;
+  }
+  .search-bar-expanded input {
+    min-width: 120px;
+    font-size: 0.95rem;
+  }
+}
+
+.account-navbar-btn {
+  background: #8B2E2E;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.08rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(80, 60, 40, 0.08);
+  margin: 0.5rem 0;
+  transition: background 0.2s;
+}
+.account-navbar-btn:hover {
+  background: #A62639;
 }

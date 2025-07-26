@@ -76,6 +76,13 @@ body {
   font-size: 16px;
 }
 
+html, body {
+  overflow-x: hidden !important;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
 /* Reliability section */
 .reliability-icons {
   display: flex;

@@ -1,0 +1,15 @@
+.top-offers-bar {
+  width: 100vw;
+  background: #8B2E2E;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.3rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1200;
+  box-shadow: 0 2px 8px rgba(80,60,40,0.07);
+  letter-spacing: 0.04em;
+}

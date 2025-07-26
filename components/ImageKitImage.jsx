@@ -1,5 +1,6 @@
 // components/ImageKitImage.jsx
-import { IKImage, IKContext } from 'imagekitio-react';
+"use client";
+import { IKImage, IKContext } from "imagekitio-react";
 
 const ImageKitImage = ({ src, width, height, alt }) => {
   return (

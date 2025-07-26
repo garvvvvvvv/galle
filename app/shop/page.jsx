@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import PerfumeCard from "@/components/perfumecard";
 import PerfumeCard2 from '@/components/perfumecardforshop';

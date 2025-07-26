@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
 import './perfumecardforshop.css'
@@ -20,12 +20,28 @@ const PerfumeCard2 = ({
 }) => {
   const { addToCart } = useCart();
   const [showPopup, setShowPopup] = useState(false);
-  const product = { title, img, description, price, size, highlights, notes, slug };
+
+  // Ensure slug is present (fallback to title if not provided)
+  const safeSlug = slug || (title ? title.toLowerCase().replace(/\s+/g, "-") : "");
+
+  // Build product object with all required fields for cart
+  const product = {
+    slug: safeSlug,
+    title,
+    image: img, // use 'image' key for consistency with products data
+    description,
+    price,
+    size,
+    highlights,
+    notes
+  };
+
   const handleAddToCart = () => {
     addToCart(product, 1);
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 1500);
   };
+
   return (
     <div className="perfumeCard2" style={{ position: 'relative' }}>
       {showPopup && (
@@ -67,7 +83,6 @@ const PerfumeCard2 = ({
         <div className="bothbuttons">
           <Link href={readMoreLink} className="readMoreButton2">Read More</Link>
           <button className="addToCartButton2" onClick={handleAddToCart}>Add to Cart</button>
-          {/* <Link href="/checkout" className="goToCartButton2" style={{ marginTop: 8, background: '#fff', color: '#241B19', border: '1px solid #241B19', borderRadius: 8, padding: '0.5rem 1rem', textAlign: 'center', textDecoration: 'none', fontWeight: 500 }}>Go to Cart</Link> */}
         </div>
       </div>
     </div>

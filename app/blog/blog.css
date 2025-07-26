@@ -6,6 +6,26 @@
   background: transparent;
   border-radius: 18px;
   box-shadow: 0 4px 32px rgba(80,60,40,0.07);
+  position: relative;
+  overflow: visible;
+}
+.blog-listing-page::before,
+.blog-listing-page::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  background: url('/perfume.jpg') no-repeat center center;
+  background-size: contain;
+  opacity: 0.08;
+  z-index: 0;
+}
+.blog-listing-page::before {
+  left: -130px;
+}
+.blog-listing-page::after {
+  right: -130px;
 }
 .blog-title-main {
   font-family: 'Playfair Display', serif;
@@ -104,6 +124,14 @@
   line-height: 1.7;
   font-family: 'Inter', sans-serif;
 }
+@media (max-width: 900px) {
+  .blog-listing-page::before,
+  .blog-listing-page::after {
+    width: 60px;
+    left: -65px;
+    right: -65px;
+  }
+}
 @media (max-width: 700px) {
   .blog-listing-page, .blog-post-page {
     padding: 1rem 0.2rem 2rem 0.2rem;
@@ -114,5 +142,9 @@
   }
   .blog-post-img {
     max-height: 180px;
+  }
+  .blog-listing-page::before,
+  .blog-listing-page::after {
+    display: none;
   }
 }

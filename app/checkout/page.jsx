@@ -180,9 +180,25 @@ export default function CheckoutPage() {
                     <input name="city" placeholder="City" value={form.city} onChange={handleChange} required style={{ padding: 10, borderRadius: 8, border: '1px solid #d2beab' }} />
                     <textarea name="address" placeholder="Shipping Address" value={form.address} onChange={handleChange} required style={{ padding: 10, borderRadius: 8, border: '1px solid #d2beab', minHeight: 60 }} />
                     <h3 style={{ fontWeight: 600, marginTop: 12 }}>Order Summary</h3>
-                    <ul style={{ paddingLeft: 18, marginBottom: 8 }}>
+                    <ul style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', paddingLeft: 0, marginBottom: 8 }}>
                         {cart.map(item => (
-                            <li key={item.slug} style={{ marginBottom: 4 }}>{item.title} x {item.quantity} = ₹{item.price * item.quantity}</li>
+                            <li key={item._cartKey} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              background: '#f7ece6',
+                              borderRadius: 10,
+                              padding: '0.7rem 1.2rem',
+                              boxShadow: '0 2px 8px rgba(80,60,40,0.07)',
+                              minWidth: 220,
+                              gap: '1rem'
+                            }}>
+                              <img src={item.img || item.image} alt={item.title} style={{ width: 54, height: 54, borderRadius: 8, objectFit: 'cover', marginRight: 12 }} />
+                              <div>
+                                <div style={{ fontWeight: 600 }}>{item.title}</div>
+                                <div style={{ fontSize: '0.98rem', color: '#412a1f' }}>Qty: {item.quantity}</div>
+                                <div style={{ fontWeight: 500 }}>₹{item.price * item.quantity}</div>
+                              </div>
+                            </li>
                         ))}
                     </ul>
                     <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 8 }}>Total: ₹{total}</div>
