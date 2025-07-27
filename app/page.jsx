@@ -78,7 +78,7 @@ function BlogCarousel() {
         From Our Blog
       </h2>
       <Swiper
-        modules={[Navigation, Pagination, A11y]}
+        modules={[Navigation, Pagination, A11y, Autoplay]}
         navigation
         pagination={{ clickable: true }}
         spaceBetween={32}
@@ -87,6 +87,7 @@ function BlogCarousel() {
           700: { slidesPerView: 2 },
           1100: { slidesPerView: 3 },
         }}
+        autoplay={{ delay: 2500, disableOnInteraction: false }}
         style={{ maxWidth: 1100, margin: "0 auto" }}
       >
         {blogPosts.map((post, i) => (

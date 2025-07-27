@@ -14,6 +14,7 @@ h1 {
   margin: 0;
   min-height: 54px;
   height: 70px;
+  
   padding: 0 2rem;
   font-size: 1.13rem;
 }
@@ -49,7 +50,7 @@ h1 {
   align-items: center;
   list-style: none;
   gap: 4.5rem;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .shop-now{
@@ -79,8 +80,8 @@ h1 {
 }
 
 .logo img {
-  width: 38px !important;
-  height: 38px !important;
+  width: 160px !important;
+  height: auto !important;
   min-width: 32px;
   min-height: 32px;
 }
@@ -145,6 +146,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  line-height: 1;
 }
 
 .navbar-title {
@@ -177,7 +179,7 @@ h1 {
 .nav-links {
   display: flex;
   gap: 2.5rem;
-  padding: 0.7rem 0;
+  padding: 0rem 0;
   list-style: none;
   font-size: 1.13rem;
 }
@@ -208,7 +210,7 @@ h1 {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0 0.2rem;
+  /* padding: 0 0.2rem; */
 }
 .search-bar.mobile {
   min-width: 0;
@@ -253,7 +255,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.7rem 2rem 0.2rem 2rem;
+  padding: 0.3rem 2rem 0rem 2rem;
   background: #ffeedc;
 }
 
@@ -294,7 +296,7 @@ h1 {
   gap: 2.5rem;
   background: #ffeedc;
   border-bottom: 1px solid #d2beab;
-  padding: 0.5rem 2rem;
+  padding: 0.1rem 2rem 0.2rem 2rem;
 }
 
 /* Search bar styles */
@@ -302,16 +304,16 @@ h1 {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 40px;
+  /* min-width: 40px; */
 }
 
 .search-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.3rem 0.7rem;
+  /* padding: 0.3rem 0.7rem; */
   color: #8B2E2E;
-  font-size: 1.15rem;
+  /* font-size: 1.15rem; */
   border-radius: 8px;
   transition: background 0.2s;
 }
@@ -326,7 +328,7 @@ h1 {
   padding: 0.4rem 1rem;
   font-size: 1rem;
   background: #fff;
-  min-width: 220px;
+  /* min-width: 220px; */
   outline: none;
 }
 
@@ -443,11 +445,11 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.7rem;
+    gap: 1.1rem;
   }
   .navbar-mobile-row .logo img {
-    width: 38px !important;
-    height: 38px !important;
+    width: 134px !important;
+    height: 34px !important;
     min-width: 32px;
     min-height: 32px;
   }
@@ -482,11 +484,11 @@ h1 {
     flex-direction: column;
     align-items: center;
     gap: 1.2rem;
-    font-size: 1.08rem;
+    font-size: 1rem;
   }
   .mobile-nav-menu .cart-navbar-btn {
-    font-size: 1.7rem;
-    margin-left: 0;
+    /* font-size: 1.7rem; */
+    /* margin-left: 0; */
   }
   .search-bar-expanded input {
     min-width: 120px;
@@ -548,18 +550,78 @@ h1 {
 }
 
 .account-navbar-btn {
-  background: #8B2E2E;
+  background: transparent ;
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 0.7rem 1.5rem;
-  font-weight: 600;
-  font-size: 1.08rem;
+  /* padding: 0.7rem 1.5rem; */
+  /* font-weight: 600;
+   */
+  font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(80, 60, 40, 0.08);
-  margin: 0.5rem 0;
+  /* box-shadow: 0 2px 8px rgba(80, 60, 40, 0.08); */
+  /* margin: 0; */
   transition: background 0.2s;
 }
 .account-navbar-btn:hover {
   background: #A62639;
+}
+
+/* Single row navbar styles */
+.navbar-single-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  padding: 0.7rem 2rem 0.2rem 2rem;
+  background: #ffeedc;
+  width: 100%;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+  font-size: 1.13rem;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+@media (max-width: 900px) {
+  .navbar-single-row {
+    display: none;
+  }
+  .navbar-mobile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    background: #ffeedc;
+    width: 100%;
+  }
+  .mobile-logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .mobile-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+     gap: 1.1rem;
+  }
+}
+
+/* Remove second row styles */
+.navbar-links-row {
+  display: none !important;
 }
