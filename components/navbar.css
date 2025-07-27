@@ -304,14 +304,34 @@ h1 {
   .navbar-mobile-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    min-height: 65px;
+    justify-content: space-between; /* logo left, actions right */
     height: 65px;
     padding: 0 1rem;
     background: #ffeedc;
   }
+  .navbar-mobile-row > .mobile-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 0 0 auto;
+    height: 100%;
+  }
+  .navbar-mobile-row > .mobile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    height: 100%;
+    gap: 1rem;
+  }
   .navbar-outer {
-    height: 65px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    margin: auto;
+
+    justify-content: center;
   }
 }
 
@@ -339,6 +359,7 @@ h1 {
   transition: top 0.2s;
 }
 
+
 /* Ensure nav-links in mobile menu are vertical */
 .mobile-nav-menu .nav-links {
   flex-direction: column;
@@ -354,6 +375,12 @@ h1 {
 }
 @media (max-width: 900px) {
   .navbar-offset {
-    padding-top: 65px; /* match mobile navbar height */
+    padding-top: 55px;
   }
+  .logo img {
+  width: 105px !important;
+  height: auto !important;
+  /* min-width: 32px; */
+  /* min-height: 32px; */
+}
 }

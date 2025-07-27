@@ -341,7 +341,7 @@ const Navbar = () => {
         )}
         {/* Mobile search expanded */}
         {searchActive && (
-          <div style={{ width: '100%', background: '#ffeedc', padding: '0.7rem 1rem', position: 'relative', zIndex: 1200 }}>
+          <div className="mobile-search-dropdown">
             <div className="search-bar-expanded" style={{ position: 'relative', width: '100%' }}>
               <input
                 ref={searchInputRef}
