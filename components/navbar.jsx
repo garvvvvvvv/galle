@@ -138,75 +138,10 @@ const Navbar = () => {
           </ul>
           <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
             <div className="search-bar-container">
-              {!searchActive ? (
-                <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
-                  <IoMdSearch style={{ width: 27, height: 27, color: '#241B19', strokeWidth: 1, marginTop: '4px' }} />
-                </button>
-              ) : (
-                <div className="search-bar-expanded" style={{ position: 'relative' }}>
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    placeholder="Search perfumes..."
-                    style={{
-                      border: '1px solid #d2beab',
-                      borderRadius: 8,
-                      padding: '0.5rem 1.2rem',
-                      fontSize: '1.08rem',
-                      minWidth: 240,
-                      background: '#fff'
-                    }}
-                  />
-                  <button className="search-btn" aria-label="Close" onClick={() => { setSearchActive(false); setSearchValue(''); setShowSuggestions(false); }} style={{ marginLeft: 8, color: '#241B19', background: 'none', border: 'none' }}>
-                    ✕
-                  </button>
-                  {showSuggestions && (
-                    <div className="search-suggestions-dropdown">
-                      {suggestions.length > 0 ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'flex-start', padding: '0.5rem' }}>
-                          {suggestions.map(perfume => (
-                            <Link
-                              href={`/shop/${perfume.slug}`}
-                              key={perfume.slug}
-                              className="perfume-card"
-                              style={{
-                                width: 140,
-                                background: '#f7ece6',
-                                borderRadius: 10,
-                                padding: '0.7rem',
-                                boxShadow: '0 2px 8px rgba(80,60,40,0.07)',
-                                cursor: 'pointer',
-                                margin: '0.5rem',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                textDecoration: 'none'
-                              }}
-                              onClick={() => {
-                                setSearchValue('');
-                                setShowSuggestions(false);
-                                setSearchActive(false);
-                              }}
-                            >
-                              <img src={perfume.image} alt={perfume.title} style={{ width: '100%', height: 60, objectFit: 'cover', borderRadius: 8 }} />
-                              <div className="title" style={{ fontWeight: 600, marginTop: 6 }}>{perfume.title}</div>
-                              <div className="desc" style={{ fontSize: '0.9rem', color: '#8B2E2E' }}>{perfume.desc}</div>
-                            </Link>
-                          ))}
-                        </div>
-                      ) : (
-                        <div style={{ padding: '1rem', textAlign: 'center', color: '#8B2E2E' }}>
-                          No matches found.
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* Show only search icon, dropdown appears for both desktop and mobile */}
+              <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
+                <IoMdSearch style={{ width: 27, height: 27, color: '#241B19', strokeWidth: 1, marginTop: '4px' }} />
+              </button>
             </div>
             <button
               className="account-navbar-btn"
@@ -332,17 +267,30 @@ const Navbar = () => {
               <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
               <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
               <li>
-                <button className="account-navbar-btn" onClick={() => { router.push('/account'); handleMobileMenuClick(); }} style={{ background: 'transparent', border: 'none', padding: 0, textAlign: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} /><span>MY ACCOUNT</span>
+                <button
+                  onClick={() => { router.push('/account'); handleMobileMenuClick(); }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    padding: 0,
+                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} />
+                  <span>MY ACCOUNT</span>
                 </button>
               </li>
             </ul>
           </div>
         )}
-        {/* Mobile search expanded */}
+        {/* Search expanded: show dropdown on both mobile and desktop */}
         {searchActive && (
-          <div className="mobile-search-dropdown">
-            <div className="search-bar-expanded" style={{ position: 'relative', width: '100%' }}>
+          <div className="mobile-search-dropdown" style={{ position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 200 }}>
+            <div className="search-bar-expanded" style={{ position: 'relative', width: '100%', maxWidth: 340, margin: '0 auto' }}>
               <input
                 ref={searchInputRef}
                 type="text"

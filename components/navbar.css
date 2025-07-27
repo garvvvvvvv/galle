@@ -384,3 +384,45 @@ h1 {
   /* min-height: 32px; */
 }
 }
+
+/* Mobile search dropdown */
+.mobile-search-dropdown {
+  display: block;
+  position: absolute;
+  top: 65px; /* match mobile navbar height */
+  left: 0;
+  width: 100vw;
+  background: #ffeedc;
+  z-index: 1200;
+  box-shadow: 0 2px 12px rgba(80,60,40,0.07);
+  padding: 1rem 0 1rem 0;
+  transition: top 0.2s;
+  /* Only show search bar, not nav links */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide mobile search dropdown by default */
+@media (max-width: 900px) {
+  .mobile-search-dropdown {
+    display: flex;
+  }
+}
+
+.desktop-search {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .desktop-search {
+    display: none !important;
+  }
+  .mobile-search-dropdown {
+    display: flex;
+  }
+}
+@media (min-width: 901px) {
+  .mobile-search-dropdown {
+    display: flex !important;
+  }
+}
