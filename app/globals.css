@@ -72,7 +72,7 @@
 body {
   background-color: #F5F2EE;
   color: var(--text-primary);
-  font-family: var(--font-body);
+  font-family: 'Montserrat', 'Inter', 'Jost', 'Playfair Display', sans-serif;
   font-size: 16px;
 }
 

@@ -134,6 +134,7 @@ const Navbar = () => {
             <li><Link href='/shop' onClick={handleLinkClick}>SHOP</Link></li>
             <li><Link href='/about' onClick={handleLinkClick}>ABOUT</Link></li>
             <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
+            <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
           </ul>
           <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
             <div className="search-bar-container">
@@ -329,8 +330,9 @@ const Navbar = () => {
               <li><Link href='/shop' onClick={handleMobileMenuClick}>SHOP</Link></li>
               <li><Link href='/about' onClick={handleMobileMenuClick}>ABOUT</Link></li>
               <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
+              <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
               <li>
-                <button className="account-navbar-btn" onClick={() => { router.push('/account'); handleMobileMenuClick(); }} style={{ background: 'transparent', border: 'none', padding: 0, textAlign: 'center', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <button className="account-navbar-btn" onClick={() => { router.push('/account'); handleMobileMenuClick(); }} style={{ background: 'transparent', border: 'none', padding: 0, textAlign: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} /><span>MY ACCOUNT</span>
                 </button>
               </li>

@@ -1,80 +1,126 @@
 .galle-footer {
   background: #ffeedc;
   color: #241B19;
-  padding: 2.5rem 1.5rem 1rem 1.5rem;
+  padding: 3rem 2rem 2rem 2rem;
   border-top: 1px solid #d2beab;
-  font-family: 'Inter', sans-serif;
-}
-.footer-main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: auto;
-}
-.footer-logo-section {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.footer-logo {
-  width: 48px;
-  height: 48px;
-}
-.footer-brand {
+  font-family: 'Montserrat', 'Inter', 'Jost', 'Playfair Display', sans-serif;
+  min-height: 60vh;
+  height: 65vh;
+  box-sizing: border-box;
+  position: relative;
+  width: 100vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+}
+.footer-main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: auto;
+  width: 100%;
+}
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+.footer-logo-section {
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+.footer-logo {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 0.7rem;
 }
 .footer-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
   font-weight: 700;
+  margin-bottom: 0.2rem;
 }
 .footer-tagline {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #8B2E2E;
   font-weight: 400;
 }
-.footer-subscribe {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-.footer-subscribe input {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #d2beab;
-  font-size: 1rem;
-}
-.footer-subscribe button {
-  background: #8B2E2E;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
+.footer-contact {
+  font-size: 1.08rem;
   font-weight: 600;
-  cursor: pointer;
+  margin-bottom: 0.5rem;
 }
-.footer-links {
+.footer-socials {
   display: flex;
   gap: 1.2rem;
-  flex-wrap: wrap;
+  align-items: center;
 }
-.footer-links a {
+.footer-socials svg {
+  width: 32px;
+  height: 32px;
+  color: #8B2E2E;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.footer-socials svg:hover {
+  color: #A62639;
+}
+.footer-policies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.footer-policies a {
   color: #241B19;
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
+  transition: color 0.2s;
 }
-.footer-socials {
+.footer-policies a:hover {
+  color: #A62639;
+}
+.footer-subscribe {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
 }
-.footer-socials img {
-  width: 28px;
-  height: 28px;
+.footer-subscribe-desc {
+  font-size: 1rem;
+  color: #8B2E2E;
+  margin-bottom: 0.5rem;
+}
+.footer-subscribe-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+.footer-subscribe input {
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d2beab;
+  font-size: 1rem;
+  width: 180px;
+  font-family: 'Jost', 'Montserrat', sans-serif;
+}
+.footer-subscribe button {
+  background: #A62639;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: 'Jost', 'Montserrat', sans-serif;
+  transition: background 0.2s;
+}
+.footer-subscribe button:hover {
+  background: #8B2E2E;
 }
 .footer-bottom {
   display: flex;
@@ -86,16 +132,53 @@
   padding-top: 1rem;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
+}
+@media (max-width: 1100px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
 }
 @media (max-width: 700px) {
+  .galle-footer {
+    min-height: 70vh;
+    height: auto;
+    padding: 2rem 1rem 2rem 1rem;
+  }
   .footer-main {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .footer-section {
     align-items: flex-start;
-    gap: 1.2rem;
+    gap: 1rem;
   }
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
+}
+/* WhatsApp floating button */
+.whatsapp-float {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 1500;
+  background: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(80,60,40,0.13);
+  font-size: 2.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.whatsapp-float:hover {
+  background: #128c7e;
 }

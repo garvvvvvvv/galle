@@ -81,6 +81,7 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [userId, setUserId] = useState(null);
   const [cartId, setCartId] = useState(null);
+
   // Utility: Enrich cart with full product data
   const enrichCartItems = (items) => {
     if (!items) return [];
@@ -97,17 +98,22 @@ export function CartProvider({ children }) {
     });
   };
 
+  // Load cart on mount and on auth change
   useEffect(() => {
+    let ignore = false;
     async function fetchCart() {
       const { data: authData } = await supabase.auth.getUser();
       const user = authData?.user;
 
       if (!user) {
+        setUserId(null);
+        setCartId(null);
         // Guest user – localStorage
         const localCart = localStorage.getItem("galle_cart");
         if (localCart) {
-          const parsed = JSON.parse(localCart);
-          setCart(enrichCartItems(parsed));
+          setCart(enrichCartItems(JSON.parse(localCart)));
+        } else {
+          setCart([]);
         }
         return;
       }
@@ -139,10 +145,36 @@ export function CartProvider({ children }) {
         .select("id, slug, quantity")
         .eq("cart_id", cart_id);
 
-      setCart(enrichCartItems(items));
+      // If localStorage has items, migrate them to Supabase
+      const localCart = localStorage.getItem("galle_cart");
+      if (localCart && items && items.length === 0) {
+        const parsed = JSON.parse(localCart);
+        for (const item of parsed) {
+          await supabase.from("cart_items").insert({
+            cart_id: cart_id,
+            slug: item.slug,
+            quantity: item.quantity,
+          });
+        }
+        localStorage.removeItem("galle_cart");
+        // Reload items
+        const { data: migratedItems } = await supabase
+          .from("cart_items")
+          .select("id, slug, quantity")
+          .eq("cart_id", cart_id);
+        setCart(enrichCartItems(migratedItems));
+      } else {
+        setCart(enrichCartItems(items));
+      }
     }
 
     fetchCart();
+    // Listen for auth changes and reload cart
+    const { data: listener } = supabase.auth.onAuthStateChange(() => fetchCart());
+    return () => {
+      ignore = true;
+      listener?.subscription.unsubscribe();
+    };
   }, []);
 
   // Sync to localStorage if user is not logged in
