@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './navbar.css';
 import { FaShoppingCart, FaSearch, FaBars } from 'react-icons/fa';
 import { supabase } from '@/utils/supabaseClient';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useCart } from '@/components/CartContext';
 import { IoMdSearch } from "react-icons/io";
 import { LiaShoppingBagSolid } from "react-icons/lia";
@@ -33,6 +33,9 @@ const Navbar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchInputRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/" || pathname === "/home";
+  const [showStrip, setShowStrip] = useState(isHome);
   const { cart } = useCart();
   const cartCount = cart?.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
@@ -63,12 +66,13 @@ const Navbar = () => {
   };
 
   // Responsive: show mobile nav
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 900 : false);
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 900);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    // Use resize event for better performance (no matchMedia listener)
+    const updateMobile = () => setIsMobile(window.innerWidth < 900);
+    window.addEventListener("resize", updateMobile);
+    updateMobile();
+    return () => window.removeEventListener("resize", updateMobile);
   }, []);
 
   // Hamburger menu close on any button click (mobile)
@@ -118,16 +122,26 @@ const Navbar = () => {
     setSearchActive(false);
   };
 
+  // Prevent render until isMobile is determined (avoids flash of desktop layout on mobile)
+  if (typeof isMobile === "undefined") return null;
+
   return (
     <>
-      {/* Offers strip */}
-      <div className="offers-strip">
-        <span>🔥 Summer Sale: Up to 40% off on select perfumes! Free shipping over ₹999.</span>
-      </div>
-      <nav className='navbar-outer'>
+      {/* Remove offers strip */}
+      <nav
+        className='navbar-outer'
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          zIndex: 1201,
+          transition: 'top 0.2s'
+        }}
+      >
         {/* Single row for desktop/tablet */}
         {!isMobile ? (
-          <div className="navbar-single-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 2rem', background: '#ffeedc' }}>
+          <div className="navbar-single-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 2rem', background: '#ffeedc', position: 'relative' }}>
             <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
               <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={160} height={34} />
             </Link>
@@ -226,7 +240,14 @@ const Navbar = () => {
               >
                 <GoPerson style={{ width: 28, height: 28, color: '#241B19' }} />
               </button>
-              <Link href='/checkout' className='cart-navbar-btn desktop-cart-btn' aria-label='Go to Cart' style={{ display: 'flex', alignItems: 'center', height: 48, position: 'relative', color: '#241B19' }}>
+              <Link href='/checkout' className='cart-navbar-btn desktop-cart-btn' aria-label='Go to Cart' style={{
+                display: 'flex',
+                alignItems: 'center',
+                height: 48,
+                position: 'relative',
+                color: '#241B19',
+                zIndex: 2 // ensure cart icon is above hamburger
+              }}>
                 <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19' }} />
                 {cartCount > 0 && (
                   <span style={{
@@ -249,24 +270,44 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              {/* Hamburger hidden on desktop */}
+              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
+                display: 'none'
+              }}>
                 <FaBars size={28} color="#241B19" />
               </button>
             </div>
           </div>
         ) : (
-          // Mobile: logo left, actions right
-          <div className="navbar-mobile-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 1rem', background: '#ffeedc', width: '100%' }}>
+          // Mobile: logo left, actions right, hamburger always visible and not overlapping
+          <div className="navbar-mobile-row" style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.7rem 1rem',
+            background: '#ffeedc',
+            width: '100%',
+            position: 'relative'
+          }}>
             <div className="mobile-logo">
               <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                 <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={134} height={34} />
               </Link>
             </div>
-            <div className="mobile-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="mobile-actions" style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              position: 'relative'
+            }}>
               <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
                 <IoMdSearch style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 1 }} />
               </button>
-              <Link href='/checkout' className='cart-navbar-btn' aria-label='Go to Cart' style={{ position: 'relative', color: '#241B19' }}>
+              <Link href='/checkout' className='cart-navbar-btn' aria-label='Go to Cart' style={{
+                position: 'relative',
+                color: '#241B19',
+                zIndex: 2
+              }}>
                 <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 0.1 }} />
                 {cartCount > 0 && (
                   <span style={{
@@ -289,7 +330,18 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                position: 'static', // not absolute
+                marginLeft: '0.5rem',
+                zIndex: 2
+              }}>
                 <FaBars size={28} color="#241B19" />
               </button>
             </div>
