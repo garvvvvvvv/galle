@@ -343,7 +343,7 @@ function BlogPageSideContent() {
 
 export default function Home() {
   return (
-    <div className="home-page" style={{ background: 'var(--bg-page, #FDF9EF)', overflowX: 'hidden' }}>
+    <div className="home-page">
       {/* 1. Carousel at the top */}
       <ImageCarousel />
 

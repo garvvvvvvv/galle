@@ -121,7 +121,7 @@ const Navbar = () => {
           zIndex: 1201,
           boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
           background: '#ffeedc',
-          height: '60px'
+          // Remove height here, use CSS for responsive height
         }}
       >
         {/* Desktop/tablet */}
@@ -330,8 +330,8 @@ const Navbar = () => {
               <li><Link href='/about' onClick={handleMobileMenuClick}>ABOUT</Link></li>
               <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
               <li>
-                <button className="account-navbar-btn" onClick={() => { router.push('/account'); handleMobileMenuClick(); }}>
-                  <GoPerson style={{ width: 28, height: 28, color: '#241B19' }} />
+                <button className="account-navbar-btn" onClick={() => { router.push('/account'); handleMobileMenuClick(); }} style={{ background: 'transparent', border: 'none', padding: 0, textAlign: 'center', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} /><span>MY ACCOUNT</span>
                 </button>
               </li>
             </ul>
@@ -401,6 +401,8 @@ const Navbar = () => {
           </div>
         )}
       </nav>
+      {/* Add this utility class to your main layout/page container (e.g. in _app.js, layout.js, or your main page component): */}
+      {/* <div className="navbar-offset"> ...your page content... </div> */}
     </>
   );
 }
