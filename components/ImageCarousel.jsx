@@ -24,16 +24,24 @@ const mobileImages = [
   "https://ik.imagekit.io/garvchaudhary/IMG-20250706-WA0074.jpg?updatedAt=1752499477046"
 ];
 
-export default function ImageCarousel() {
-  const [isDesktop, setIsDesktop] = React.useState(true);
+function useMediaQuery(query) {
+  const [matches, setMatches] = React.useState(false);
 
   React.useEffect(() => {
-    const checkDesktop = () => setIsDesktop(window.innerWidth >= 900);
-    checkDesktop();
-    window.addEventListener("resize", checkDesktop);
-    return () => window.removeEventListener("resize", checkDesktop);
-  }, []);
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
 
+  return matches;
+}
+
+export default function ImageCarousel() {
+  const isDesktop = useMediaQuery("(min-width: 900px)");
   const images = isDesktop ? desktopImages : mobileImages;
 
   return (
@@ -59,5 +67,3 @@ export default function ImageCarousel() {
     </div>
   );
 }
-
-

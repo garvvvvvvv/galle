@@ -1,6 +1,9 @@
 nav {
   background-color: #ffeedc;
   padding: 0 5rem;
+    position: sticky;
+  top: 0;
+  z-index: 999;
 }
 
 h1 {
@@ -8,6 +11,9 @@ h1 {
 }
 
 .navbar {
+    position: sticky;
+  top: 0;
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -68,22 +74,15 @@ h1 {
 
 
 .hamburger {
-  display: none !important; /* hide hamburger for desktop */
-}
-
-@media (max-width: 900px) {
-  .hamburger {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    position: static !important;
-    margin-left: 0.5rem;
-    z-index: 2;
-  }
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
 }
 
 .logo img {
@@ -242,15 +241,11 @@ h1 {
   background: #8B2E2E;
   color: #fff;
   text-align: center;
-  font-size: 0.92rem;
+  font-size: 1.08rem;
   font-weight: 500;
-  padding: 0.22rem 0;
+  padding: 0.5rem 0;
   letter-spacing: 0.04em;
-  z-index: 1202;
-  position: fixed;
-  top: 0;
-  left: 0;
-  transition: top 0.2s;
+  z-index: 1200;
 }
 
 /* Outer navbar container for spacing */
@@ -262,7 +257,108 @@ h1 {
   top: 0;
   width: 100vw;
   z-index: 1201;
-  transition: top 0.2s;
+  height: 70px; /* match the reduced height */
+}
+
+
+/* Desktop/tablet navbar */
+.navbar-single-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 2rem;
+  background: #ffeedc;
+  position: relative;
+  width: 100%;
+  min-height: 60px;
+  height: 60px;
+}
+
+/* Mobile navbar */
+.navbar-mobile-row {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .navbar-single-row {
+    display: none;
+  }
+  .navbar-mobile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+    background: #ffeedc;
+    width: 100%;
+    min-height: 60px;
+    height: 60px;
+  }
+}
+
+/* Search bar styles */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #d2beab;
+  padding: 0.2rem 0.7rem;
+  margin-right: 0.5rem;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  min-width: 120px;
+}
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* padding: 0 0.2rem; */
+}
+.search-bar.mobile {
+  min-width: 0;
+  width: 100%;
+  margin-right: 0;
+}
+@media (max-width: 700px) {
+  .search-bar {
+    width: 100%;
+    margin-right: 0;
+    padding: 0.2rem 0.3rem;
+  }
+  .search-bar input {
+    min-width: 60px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Offers strip */
+.offers-strip {
+  width: 100vw;
+  background: #8B2E2E;
+  color: #fff;
+  text-align: center;
+  font-size: 1.08rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  letter-spacing: 0.04em;
+  z-index: 1200;
+}
+
+/* Outer navbar container for spacing */
+.navbar-outer {
+  background-color: #ffeedc;
+  box-shadow: 0 2px 12px rgba(80,60,40,0.07);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 1201;
+  height: 70px; /* match the reduced height */
 }
 
 /* Top row: logo, tagline, actions */
@@ -432,9 +528,11 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.7rem 1rem;
+    padding: 0.4rem 1rem;
     background: #ffeedc;
     width: 100%;
+    min-height: 60px;
+    height: 60px;
   }
   .navbar-mobile-row > .mobile-logo {
     flex: 0 0 auto;
@@ -451,6 +549,16 @@ h1 {
     min-width: 0;
   }
 
+  .navbar-outer {
+  background-color: #ffeedc;
+  box-shadow: 0 2px 12px rgba(80,60,40,0.07);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 1201;
+  height: 60px; /* match the reduced height */
+}
   nav {
   background-color: #ffeedc;
   padding: 0rem;
@@ -460,7 +568,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 1.1rem;
+    gap: 0.7rem;
   }
   .navbar-mobile-row .logo img {
     width: 134px !important;
@@ -591,6 +699,8 @@ h1 {
   padding: 0.7rem 2rem 0.2rem 2rem;
   background: #ffeedc;
   width: 100%;
+  min-height: 60px;
+  height: 60px;
 }
 
 .nav-links {
@@ -617,7 +727,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.7rem 1rem;
+    padding: 0.4rem 1rem;
     background: #ffeedc;
     width: 100%;
   }
@@ -632,7 +742,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-     gap: 1.1rem;
+    gap: 0.7rem;
   }
 }
 

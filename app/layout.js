@@ -35,6 +35,7 @@ export default function RootLayout({ children }) {
         <UserProvider>
           <CartProvider>
             <Navbar />
+            <div className="navbar-offset" />
             {children}
           </CartProvider>
         </UserProvider>

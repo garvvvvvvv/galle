@@ -34,8 +34,6 @@ const Navbar = () => {
   const searchInputRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
-  const isHome = pathname === "/" || pathname === "/home";
-  const [showStrip, setShowStrip] = useState(isHome);
   const { cart } = useCart();
   const cartCount = cart?.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
@@ -64,16 +62,6 @@ const Navbar = () => {
     setAccountOpen(false);
     router.refresh?.();
   };
-
-  // Responsive: show mobile nav
-  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 900 : false);
-  useEffect(() => {
-    // Use resize event for better performance (no matchMedia listener)
-    const updateMobile = () => setIsMobile(window.innerWidth < 900);
-    window.addEventListener("resize", updateMobile);
-    updateMobile();
-    return () => window.removeEventListener("resize", updateMobile);
-  }, []);
 
   // Hamburger menu close on any button click (mobile)
   const handleMobileMenuClick = () => setOpen(false);
@@ -115,19 +103,14 @@ const Navbar = () => {
   };
 
   const handleSuggestionClick = (perfume) => {
-    // Use the actual slug from products data for navigation
     router.push(`/shop/${perfume.slug}`);
     setSearchValue('');
     setShowSuggestions(false);
     setSearchActive(false);
   };
 
-  // Prevent render until isMobile is determined (avoids flash of desktop layout on mobile)
-  if (typeof isMobile === "undefined") return null;
-
   return (
     <>
-      {/* Remove offers strip */}
       <nav
         className='navbar-outer'
         style={{
@@ -136,219 +119,210 @@ const Navbar = () => {
           left: 0,
           width: '100vw',
           zIndex: 1201,
-          transition: 'top 0.2s'
+          boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
+          background: '#ffeedc',
+          height: '60px'
         }}
       >
-        {/* Single row for desktop/tablet */}
-        {!isMobile ? (
-          <div className="navbar-single-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.7rem 2rem', background: '#ffeedc', position: 'relative' }}>
-            <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-              <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={160} height={34} />
-            </Link>
-            <ul className="nav-links" style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '2.5rem', margin: 0 }}>
-              <li><Link href='/' onClick={handleLinkClick}>HOME</Link></li>
-              <li><Link href='/shop' onClick={handleLinkClick}>SHOP</Link></li>
-              <li><Link href='/about' onClick={handleLinkClick}>ABOUT</Link></li>
-              <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
-            </ul>
-            <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-              <div className="search-bar-container">
-                {!searchActive ? (
-                  <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
-                    <IoMdSearch style={{ width: 27, height: 27, color: '#241B19', strokeWidth:1, marginTop: '4px' }} />
+        {/* Desktop/tablet */}
+        <div className="navbar-single-row">
+          <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+            <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={160} height={34} />
+          </Link>
+          <ul className="nav-links" style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '2.5rem', margin: 0 }}>
+            <li><Link href='/' onClick={handleLinkClick}>HOME</Link></li>
+            <li><Link href='/shop' onClick={handleLinkClick}>SHOP</Link></li>
+            <li><Link href='/about' onClick={handleLinkClick}>ABOUT</Link></li>
+            <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
+          </ul>
+          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+            <div className="search-bar-container">
+              {!searchActive ? (
+                <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
+                  <IoMdSearch style={{ width: 27, height: 27, color: '#241B19', strokeWidth: 1, marginTop: '4px' }} />
+                </button>
+              ) : (
+                <div className="search-bar-expanded" style={{ position: 'relative' }}>
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchValue}
+                    onChange={handleSearchChange}
+                    onFocus={handleSearchFocus}
+                    onBlur={handleSearchBlur}
+                    placeholder="Search perfumes..."
+                    style={{
+                      border: '1px solid #d2beab',
+                      borderRadius: 8,
+                      padding: '0.5rem 1.2rem',
+                      fontSize: '1.08rem',
+                      minWidth: 240,
+                      background: '#fff'
+                    }}
+                  />
+                  <button className="search-btn" aria-label="Close" onClick={() => { setSearchActive(false); setSearchValue(''); setShowSuggestions(false); }} style={{ marginLeft: 8, color: '#241B19', background: 'none', border: 'none' }}>
+                    ✕
                   </button>
-                ) : (
-                  <div className="search-bar-expanded" style={{ position: 'relative' }}>
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchValue}
-                      onChange={handleSearchChange}
-                      onFocus={handleSearchFocus}
-                      onBlur={handleSearchBlur}
-                      placeholder="Search perfumes..."
-                      style={{
-                        border: '1px solid #d2beab',
-                        borderRadius: 8,
-                        padding: '0.5rem 1.2rem',
-                        fontSize: '1.08rem',
-                        minWidth: 240,
-                        background: '#fff'
-                      }}
-                    />
-                    <button className="search-btn" aria-label="Close" onClick={() => { setSearchActive(false); setSearchValue(''); setShowSuggestions(false); }} style={{ marginLeft: 8, color: '#241B19', background: 'none', border: 'none' }}>
-                      ✕
-                    </button>
-                    {showSuggestions && (
-                      <div className="search-suggestions-dropdown">
-                        {suggestions.length > 0 ? (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'flex-start', padding: '0.5rem' }}>
-                            {suggestions.map(perfume => (
-                              <Link
-                                href={`/shop/${perfume.slug}`}
-                                key={perfume.slug}
-                                className="perfume-card"
-                                style={{
-                                  width: 140,
-                                  background: '#f7ece6',
-                                  borderRadius: 10,
-                                  padding: '0.7rem',
-                                  boxShadow: '0 2px 8px rgba(80,60,40,0.07)',
-                                  cursor: 'pointer',
-                                  margin: '0.5rem',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'center',
-                                  textDecoration: 'none'
-                                }}
-                                onClick={() => {
-                                  setSearchValue('');
-                                  setShowSuggestions(false);
-                                  setSearchActive(false);
-                                }}
-                              >
-                                <img src={perfume.image} alt={perfume.title} style={{ width: '100%', height: 60, objectFit: 'cover', borderRadius: 8 }} />
-                                <div className="title" style={{ fontWeight: 600, marginTop: 6 }}>{perfume.title}</div>
-                                <div className="desc" style={{ fontSize: '0.9rem', color: '#8B2E2E' }}>{perfume.desc}</div>
-                              </Link>
-                            ))}
-                          </div>
-                        ) : (
-                          <div style={{ padding: '1rem', textAlign: 'center', color: '#8B2E2E' }}>
-                            No matches found.
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <button
-                className="account-navbar-btn"
-                onClick={() => { router.push('/account'); setOpen(false); }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#241B19',
-                  fontWeight: 600,
-                  fontSize: '1.13rem',
-                  cursor: 'pointer',
-                  padding: 0,
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <GoPerson style={{ width: 28, height: 28, color: '#241B19' }} />
-              </button>
-              <Link href='/checkout' className='cart-navbar-btn desktop-cart-btn' aria-label='Go to Cart' style={{
-                display: 'flex',
-                alignItems: 'center',
-                height: 48,
-                position: 'relative',
-                color: '#241B19',
-                zIndex: 2 // ensure cart icon is above hamburger
-              }}>
-                <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19' }} />
-                {cartCount > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: -6,
-                    right: -10,
-                    background: '#A62639',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    fontSize: '0.95rem',
-                    fontWeight: 700,
-                    minWidth: 22,
-                    height: 22,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
-                  }}>
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-              {/* Hamburger hidden on desktop */}
-              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
-                display: 'none'
-              }}>
-                <FaBars size={28} color="#241B19" />
-              </button>
+                  {showSuggestions && (
+                    <div className="search-suggestions-dropdown">
+                      {suggestions.length > 0 ? (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'flex-start', padding: '0.5rem' }}>
+                          {suggestions.map(perfume => (
+                            <Link
+                              href={`/shop/${perfume.slug}`}
+                              key={perfume.slug}
+                              className="perfume-card"
+                              style={{
+                                width: 140,
+                                background: '#f7ece6',
+                                borderRadius: 10,
+                                padding: '0.7rem',
+                                boxShadow: '0 2px 8px rgba(80,60,40,0.07)',
+                                cursor: 'pointer',
+                                margin: '0.5rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textDecoration: 'none'
+                              }}
+                              onClick={() => {
+                                setSearchValue('');
+                                setShowSuggestions(false);
+                                setSearchActive(false);
+                              }}
+                            >
+                              <img src={perfume.image} alt={perfume.title} style={{ width: '100%', height: 60, objectFit: 'cover', borderRadius: 8 }} />
+                              <div className="title" style={{ fontWeight: 600, marginTop: 6 }}>{perfume.title}</div>
+                              <div className="desc" style={{ fontSize: '0.9rem', color: '#8B2E2E' }}>{perfume.desc}</div>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={{ padding: '1rem', textAlign: 'center', color: '#8B2E2E' }}>
+                          No matches found.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </div>
-        ) : (
-          // Mobile: logo left, actions right, hamburger always visible and not overlapping
-          <div className="navbar-mobile-row" style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0.7rem 1rem',
-            background: '#ffeedc',
-            width: '100%',
-            position: 'relative'
-          }}>
-            <div className="mobile-logo">
-              <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={134} height={34} />
-              </Link>
-            </div>
-            <div className="mobile-actions" style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              position: 'relative'
-            }}>
-              <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
-                <IoMdSearch style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 1 }} />
-              </button>
-              <Link href='/checkout' className='cart-navbar-btn' aria-label='Go to Cart' style={{
-                position: 'relative',
-                color: '#241B19',
-                zIndex: 2
-              }}>
-                <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 0.1 }} />
-                {cartCount > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: -6,
-                    right: -10,
-                    background: '#A62639',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    fontSize: '0.95rem',
-                    fontWeight: 700,
-                    minWidth: 22,
-                    height: 22,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
-                  }}>
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-              <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+            <button
+              className="account-navbar-btn"
+              onClick={() => { router.push('/account'); setOpen(false); }}
+              style={{
                 background: 'none',
                 border: 'none',
+                color: '#241B19',
+                fontWeight: 600,
+                fontSize: '1.13rem',
                 cursor: 'pointer',
                 padding: 0,
-                position: 'static', // not absolute
-                marginLeft: '0.5rem',
-                zIndex: 2
-              }}>
-                <FaBars size={28} color="#241B19" />
-              </button>
-            </div>
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <GoPerson style={{ width: 28, height: 28, color: '#241B19' }} />
+            </button>
+            <Link href='/checkout' className='cart-navbar-btn desktop-cart-btn' aria-label='Go to Cart' style={{
+              display: 'flex',
+              alignItems: 'center',
+              height: 48,
+              position: 'relative',
+              color: '#241B19',
+              zIndex: 2 // ensure cart icon is above hamburger
+            }}>
+              <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19' }} />
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: -6,
+                  right: -10,
+                  background: '#A62639',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  minWidth: 22,
+                  height: 22,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
+                }}>
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            {/* Hamburger hidden on desktop */}
+            <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
+              display: 'none'
+            }}>
+              <FaBars size={28} color="#241B19" />
+            </button>
           </div>
-        )}
+        </div>
+        {/* Mobile */}
+        <div className="navbar-mobile-row">
+          <div className="mobile-logo">
+            <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={134} height={34} />
+            </Link>
+          </div>
+          <div className="mobile-actions" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            position: 'relative'
+          }}>
+            <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
+              <IoMdSearch style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 1 }} />
+            </button>
+            <Link href='/checkout' className='cart-navbar-btn' aria-label='Go to Cart' style={{
+              position: 'relative',
+              color: '#241B19',
+              zIndex: 2
+            }}>
+              <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 0.1 }} />
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: -6,
+                  right: -10,
+                  background: '#A62639',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  minWidth: 22,
+                  height: 22,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
+                }}>
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              position: 'static', // not absolute
+              marginLeft: '0.5rem',
+              zIndex: 2
+            }}>
+              <FaBars size={28} color="#241B19" />
+            </button>
+          </div>
+        </div>
         {/* Mobile nav menu */}
-        {isMobile && open && (
+        {open && (
           <div className="mobile-nav-menu">
             <ul className="nav-links">
               <li><Link href='/' onClick={handleMobileMenuClick}>HOME</Link></li>
@@ -364,7 +338,7 @@ const Navbar = () => {
           </div>
         )}
         {/* Mobile search expanded */}
-        {isMobile && searchActive && (
+        {searchActive && (
           <div style={{ width: '100%', background: '#ffeedc', padding: '0.7rem 1rem', position: 'relative', zIndex: 1200 }}>
             <div className="search-bar-expanded" style={{ position: 'relative', width: '100%' }}>
               <input
