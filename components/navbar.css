@@ -86,7 +86,7 @@ h1 {
 }
 
 .logo img {
-  width: 160px !important;
+  width: 140px !important;
   height: auto !important;
   min-width: 32px;
   min-height: 32px;
@@ -257,7 +257,7 @@ h1 {
   top: 0;
   width: 100vw;
   z-index: 1201;
-  height: 75px; /* laptop default */
+  height: 86px; /* laptop default */
   display: flex;
   align-items: center;
 }
