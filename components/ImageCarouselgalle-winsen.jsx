@@ -36,7 +36,9 @@ export default function ImageCarouselGalleWinsen({ images }) {
               <img
                 src={src}
                 alt={`Thumbnail ${i + 1}`}
-                style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #eee', cursor: 'pointer' }}
+                style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #eee', cursor: 'pointer', transition: 'transform 0.3s' }}
+                onMouseOver={e => e.currentTarget.style.transform = "scale(1.07)"}
+                onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
               />
             </SwiperSlide>
           ))}
@@ -60,9 +62,11 @@ export default function ImageCarouselGalleWinsen({ images }) {
                 <img
                   src={src}
                   alt={`Perfume ${i + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '12px', background: '#f8f8f8' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '12px', background: '#f8f8f8', transition: 'transform 0.4s' }}
                   width={400}
                   height={400}
+                  onMouseOver={e => e.currentTarget.style.transform = "scale(1.06)"}
+                  onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
                 />
               ) : (
                 <img src={src} alt={`Perfume ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '12px', background: '#f8f8f8' }} width={400} height={400} />

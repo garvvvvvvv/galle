@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Thumbs, Zoom } from 'swiper/modules';
+import { motion } from 'framer-motion';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
@@ -63,9 +64,10 @@ export default function ProductCarousel({ gallery }) {
                 height: '100%',
                 background: 'transparent',
                 padding: width <= 700 ? 1 : 0,
+                overflow: 'hidden'
               }}
             >
-              <img
+              <motion.img
                 src={img}
                 alt={`Product image ${idx + 1}`}
                 style={{
@@ -77,7 +79,10 @@ export default function ProductCarousel({ gallery }) {
                   background: 'transparent',
                   display: 'block',
                   padding: 0,
+                  transition: 'transform 0.5s cubic-bezier(.4,0,.2,1)'
                 }}
+                whileHover={{ scale: 1.08, rotate: 2 }}
+                transition={{ type: "spring", stiffness: 300, damping: 12 }}
               />
             </div>
           </SwiperSlide>

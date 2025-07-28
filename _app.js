@@ -5,7 +5,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        {/* Remove duplicate Montserrat font link, fonts are loaded globally */}
       </Head>
       <Component {...pageProps} />
     </>

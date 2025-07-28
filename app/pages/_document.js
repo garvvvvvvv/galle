@@ -9,9 +9,9 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
 
-        {/* Load all 4 fonts */}
+        {/* Load all fonts */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700&family=Jost:wght@200;400;600&family=Luxurious+Script&family=Playfair+Display:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700&family=Jost:wght@200;400;600&family=Luxurious+Script&family=Playfair+Display:wght@400;500&family=Montserrat:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </Head>

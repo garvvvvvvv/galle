@@ -2,12 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 import countryCodes from './countryCodes.json'; // You need to create this file with all country codes
-// import handleChange from './handleChange'; // Assuming you have a utility function for input changes    
+import { motion, AnimatePresence } from "framer-motion";
+
 const SignupModal = () => {
-  // Add handleChange for form fields
-  const handleChange = (e) => {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-  };
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({
     first_name: '',
@@ -36,7 +33,10 @@ const SignupModal = () => {
     }
   };
 
-    // (Removed duplicate/invalid error declaration)
+  const handleChange = (e) => {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // 1. Sign up user with Supabase Auth
@@ -107,92 +107,106 @@ const SignupModal = () => {
   if (!show) return null;
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(40, 30, 20, 0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'opacity 0.3s' }}>
-      <div style={{ background: '#fff', borderRadius: '18px', boxShadow: '0 8px 32px rgba(80, 60, 40, 0.18)', padding: '2.2rem 1.5rem 1.5rem 1.5rem', maxWidth: 340, width: '90vw', textAlign: 'center', position: 'relative', fontFamily: 'Inter, Arial, sans-serif' }}>
-        <button onClick={handleClose} aria-label="Close" style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: '1.5rem', color: '#8B2E2E', cursor: 'pointer', fontWeight: 600 }}>×</button>
-        <h2 style={{ fontWeight: 700, fontSize: '1.5rem', marginBottom: '0.5rem', color: '#8B2E2E' }}>Join Our Tribe</h2>
-        <p style={{ fontSize: '1.08rem', color: '#412a1f', marginBottom: '1.2rem', fontWeight: 400 }}>Sign up to receive exclusive offers, tips, and product drops!</p>
-        {!submitted ? (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem', alignItems: 'center' }}>
-            <input name="first_name" value={form.first_name} onChange={handleChange} required placeholder="First Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <input name="last_name" value={form.last_name} onChange={handleChange} required placeholder="Last Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <input name="phone" value={form.phone} onChange={handleChange} required placeholder="Phone Number" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <select name="country_code" value={form.country_code} onChange={handleChange} required style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none', background: '#fff' }}>
-              <option value="">Country Code</option>
-              <option value="+91">India (+91)</option>
-              <option value="+1">United States (+1)</option>
-              <option value="+44">United Kingdom (+44)</option>
-              <option value="+61">Australia (+61)</option>
-              <option value="+81">Japan (+81)</option>
-              <option value="+49">Germany (+49)</option>
-              <option value="+33">France (+33)</option>
-              <option value="+86">China (+86)</option>
-              <option value="+971">UAE (+971)</option>
-              <option value="+7">Russia (+7)</option>
-              <option value="+39">Italy (+39)</option>
-              <option value="+34">Spain (+34)</option>
-              <option value="+55">Brazil (+55)</option>
-              <option value="+27">South Africa (+27)</option>
-              <option value="+82">South Korea (+82)</option>
-              <option value="+65">Singapore (+65)</option>
-              <option value="+62">Indonesia (+62)</option>
-              <option value="+880">Bangladesh (+880)</option>
-              <option value="+92">Pakistan (+92)</option>
-              <option value="+20">Egypt (+20)</option>
-              <option value="+966">Saudi Arabia (+966)</option>
-              <option value="+63">Philippines (+63)</option>
-              <option value="+60">Malaysia (+60)</option>
-              <option value="+234">Nigeria (+234)</option>
-              <option value="+212">Morocco (+212)</option>
-              <option value="+351">Portugal (+351)</option>
-              <option value="+90">Turkey (+90)</option>
-              <option value="+380">Ukraine (+380)</option>
-              <option value="+994">Azerbaijan (+994)</option>
-              <option value="+998">Uzbekistan (+998)</option>
-              <option value="+84">Vietnam (+84)</option>
-              <option value="+66">Thailand (+66)</option>
-              <option value="+64">New Zealand (+64)</option>
-              <option value="+1-242">Bahamas (+1-242)</option>
-              <option value="+1-246">Barbados (+1-246)</option>
-              <option value="+1-441">Bermuda (+1-441)</option>
-              <option value="+1-284">British Virgin Islands (+1-284)</option>
-              <option value="+1-345">Cayman Islands (+1-345)</option>
-              <option value="+1-767">Dominica (+1-767)</option>
-              <option value="+1-809">Dominican Republic (+1-809)</option>
-              <option value="+358">Finland (+358)</option>
-              <option value="+995">Georgia (+995)</option>
-              <option value="+30">Greece (+30)</option>
-              <option value="+852">Hong Kong (+852)</option>
-              <option value="+36">Hungary (+36)</option>
-              <option value="+353">Ireland (+353)</option>
-              <option value="+972">Israel (+972)</option>
-              <option value="+254">Kenya (+254)</option>
-              <option value="+370">Lithuania (+370)</option>
-              <option value="+352">Luxembourg (+352)</option>
-              <option value="+356">Malta (+356)</option>
-              <option value="+52">Mexico (+52)</option>
-              <option value="+31">Netherlands (+31)</option>
-              <option value="+47">Norway (+47)</option>
-              <option value="+48">Poland (+48)</option>
-              <option value="+40">Romania (+40)</option>
-              <option value="+65">Singapore (+65)</option>
-              <option value="+46">Sweden (+46)</option>
-              <option value="+41">Switzerland (+41)</option>
-              <option value="+886">Taiwan (+886)</option>
-              <option value="+971">UAE (+971)</option>
-              <option value="+380">Ukraine (+380)</option>
-              <option value="+44">United Kingdom (+44)</option>
-              <option value="+1">United States (+1)</option>
-            </select>
-            <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Email" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <input name="city" value={form.city} onChange={handleChange} required placeholder="City" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
-            <button type="submit" style={{ background: '#8B2E2E', color: '#fff', border: 'none', borderRadius: '8px', padding: '0.7rem 1.5rem', fontWeight: 600, fontSize: '1.08rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(80, 60, 40, 0.08)' }}>Subscribe</button>
-          </form>
-        ) : (
-          <div style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginTop: '1.2rem' }}>Thank you for subscribing!</div>
-        )}
-      </div>
-    </div>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.35 }}
+        style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(40, 30, 20, 0.18)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'opacity 0.3s' }}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          transition={{ duration: 0.35 }}
+          style={{ background: '#fff', borderRadius: '18px', boxShadow: '0 8px 32px rgba(80, 60, 40, 0.18)', padding: '2.2rem 1.5rem 1.5rem 1.5rem', maxWidth: 340, width: '90vw', textAlign: 'center', position: 'relative', fontFamily: 'Inter, Arial, sans-serif' }}
+        >
+          <button onClick={handleClose} aria-label="Close" style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: '1.5rem', color: '#8B2E2E', cursor: 'pointer', fontWeight: 600 }}>×</button>
+          <h2 style={{ fontWeight: 700, fontSize: '1.5rem', marginBottom: '0.5rem', color: '#8B2E2E' }}>Join Our Tribe</h2>
+          <p style={{ fontSize: '1.08rem', color: '#412a1f', marginBottom: '1.2rem', fontWeight: 400 }}>Sign up to receive exclusive offers, tips, and product drops!</p>
+          {!submitted ? (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem', alignItems: 'center' }}>
+              <input name="first_name" value={form.first_name} onChange={handleChange} required placeholder="First Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
+              <input name="last_name" value={form.last_name} onChange={handleChange} required placeholder="Last Name" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
+              <input name="phone" value={form.phone} onChange={handleChange} required placeholder="Phone Number" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
+              <select name="country_code" value={form.country_code} onChange={handleChange} required style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none', background: '#fff' }}>
+                <option value="">Country Code</option>
+                <option value="+91">India (+91)</option>
+                <option value="+1">United States (+1)</option>
+                <option value="+44">United Kingdom (+44)</option>
+                <option value="+61">Australia (+61)</option>
+                <option value="+81">Japan (+81)</option>
+                <option value="+49">Germany (+49)</option>
+                <option value="+33">France (+33)</option>
+                <option value="+86">China (+86)</option>
+                <option value="+971">UAE (+971)</option>
+                <option value="+7">Russia (+7)</option>
+                <option value="+39">Italy (+39)</option>
+                <option value="+34">Spain (+34)</option>
+                <option value="+55">Brazil (+55)</option>
+                <option value="+27">South Africa (+27)</option>
+                <option value="+82">South Korea (+82)</option>
+                <option value="+65">Singapore (+65)</option>
+                <option value="+62">Indonesia (+62)</option>
+                <option value="+880">Bangladesh (+880)</option>
+                <option value="+92">Pakistan (+92)</option>
+                <option value="+20">Egypt (+20)</option>
+                <option value="+966">Saudi Arabia (+966)</option>
+                <option value="+63">Philippines (+63)</option>
+                <option value="+60">Malaysia (+60)</option>
+                <option value="+234">Nigeria (+234)</option>
+                <option value="+212">Morocco (+212)</option>
+                <option value="+351">Portugal (+351)</option>
+                <option value="+90">Turkey (+90)</option>
+                <option value="+380">Ukraine (+380)</option>
+                <option value="+994">Azerbaijan (+994)</option>
+                <option value="+998">Uzbekistan (+998)</option>
+                <option value="+84">Vietnam (+84)</option>
+                <option value="+66">Thailand (+66)</option>
+                <option value="+64">New Zealand (+64)</option>
+                <option value="+1-242">Bahamas (+1-242)</option>
+                <option value="+1-246">Barbados (+1-246)</option>
+                <option value="+1-441">Bermuda (+1-441)</option>
+                <option value="+1-284">British Virgin Islands (+1-284)</option>
+                <option value="+1-345">Cayman Islands (+1-345)</option>
+                <option value="+1-767">Dominica (+1-767)</option>
+                <option value="+1-809">Dominican Republic (+1-809)</option>
+                <option value="+358">Finland (+358)</option>
+                <option value="+995">Georgia (+995)</option>
+                <option value="+30">Greece (+30)</option>
+                <option value="+852">Hong Kong (+852)</option>
+                <option value="+36">Hungary (+36)</option>
+                <option value="+353">Ireland (+353)</option>
+                <option value="+972">Israel (+972)</option>
+                <option value="+254">Kenya (+254)</option>
+                <option value="+370">Lithuania (+370)</option>
+                <option value="+352">Luxembourg (+352)</option>
+                <option value="+356">Malta (+356)</option>
+                <option value="+52">Mexico (+52)</option>
+                <option value="+31">Netherlands (+31)</option>
+                <option value="+47">Norway (+47)</option>
+                <option value="+48">Poland (+48)</option>
+                <option value="+40">Romania (+40)</option>
+                <option value="+65">Singapore (+65)</option>
+                <option value="+46">Sweden (+46)</option>
+                <option value="+41">Switzerland (+41)</option>
+                <option value="+886">Taiwan (+886)</option>
+                <option value="+971">UAE (+971)</option>
+                <option value="+380">Ukraine (+380)</option>
+                <option value="+44">United Kingdom (+44)</option>
+                <option value="+1">United States (+1)</option>
+              </select>
+              <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Email" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
+              <input name="city" value={form.city} onChange={handleChange} required placeholder="City" style={{ padding: '0.7rem', borderRadius: '8px', border: '1px solid #8B2E2E', fontSize: '1rem', width: '90%', outline: 'none' }} />
+              <button type="submit" style={{ background: '#8B2E2E', color: '#fff', border: 'none', borderRadius: '8px', padding: '0.7rem 1.5rem', fontWeight: 600, fontSize: '1.08rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(80, 60, 40, 0.08)' }}>Subscribe</button>
+            </form>
+          ) : (
+            <div style={{ color: '#8B2E2E', fontWeight: 600, fontSize: '1.1rem', marginTop: '1.2rem' }}>Thank you for subscribing!</div>
+          )}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

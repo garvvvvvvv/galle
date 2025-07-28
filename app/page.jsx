@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import ImageKitImage from "@/components/ImageKitImage";
 import './globals.css'
 import Navbar from "@/components/navbar";
@@ -11,6 +11,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
+import { motion } from "framer-motion";
+import { SpotlightButton } from "@/components/SpotlightButton";
 
 // --- Testimonials data ---
 const testimonials = [
@@ -72,8 +74,12 @@ function BlogCarousel() {
   return (
     <section style={{ margin: "3rem 0" }}>
       <h2 style={{
-        fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem',
-        color: '#8B2E2E', marginBottom: 24, textAlign: 'center'
+        fontFamily: "'Playfair Display', serif",
+        fontWeight: 700,
+        fontSize: '2rem',
+        color: '#8B2E2E',
+        marginBottom: 24,
+        textAlign: 'center'
       }}>
         From Our Blog
       </h2>
@@ -92,42 +98,50 @@ function BlogCarousel() {
       >
         {blogPosts.map((post, i) => (
           <SwiperSlide key={i}>
-            <Link
-              href={`/blog/${post.slug}`}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                background: '#fff',
-                borderRadius: 14,
-                boxShadow: '0 2px 12px rgba(80,60,40,0.06)',
-                textDecoration: 'none',
-                color: '#241B19',
-                overflow: 'hidden',
-                minHeight: 340
-              }}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <img
-                src={post.image}
-                alt={post.title}
+              <Link
+                href={`/blog/${post.slug}`}
                 style={{
-                  width: '100%',
-                  height: 220,
-                  objectFit: 'cover',
-                  borderBottom: '1px solid #f7ece6'
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: '#fff',
+                  borderRadius: 14,
+                  boxShadow: '0 2px 12px rgba(80,60,40,0.06)',
+                  textDecoration: 'none',
+                  color: '#241B19',
+                  overflow: 'hidden',
+                  minHeight: 340
                 }}
-              />
-              <div style={{
-                padding: '1.2rem 1.2rem 1.5rem 1.2rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.7rem'
-              }}>
-                <div style={{ fontSize: '0.95rem', color: '#8B2E2E', fontWeight: 500 }}>{post.date}</div>
-                <div style={{ fontSize: '1.3rem', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}>{post.title}</div>
-                <div style={{ fontSize: '1.05rem', color: '#412a1f', fontWeight: 400 }}>{post.desc}</div>
-                <span style={{ color: '#A62639', fontWeight: 700, marginTop: '0.5rem', fontSize: '1.05rem' }}>Read More →</span>
-              </div>
-            </Link>
+              >
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  style={{
+                    width: '100%',
+                    height: 220,
+                    objectFit: 'cover',
+                    borderBottom: '1px solid #f7ece6',
+                    transition: 'transform 0.35s cubic-bezier(.4,0,.2,1)'
+                  }}
+                  className="zoom-on-hover"
+                />
+                <div style={{
+                  padding: '1.2rem 1.2rem 1.5rem 1.2rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.7rem'
+                }}>
+                  <div style={{ fontSize: '0.95rem', color: '#8B2E2E', fontWeight: 500 }}>{post.date}</div>
+                  <div style={{ fontSize: '1.3rem', fontWeight: 700, fontFamily: 'Playfair Display, serif' }}>{post.title}</div>
+                  <div style={{ fontSize: '1.05rem', color: '#412a1f', fontWeight: 400 }}>{post.desc}</div>
+                  <span style={{ color: '#A62639', fontWeight: 700, marginTop: '0.5rem', fontSize: '1.05rem' }}>Read More →</span>
+                </div>
+              </Link>
+            </motion.div>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -235,7 +249,7 @@ function FeatureCardSlider() {
     >
       <h2
         style={{
-          fontFamily: "Playfair Display",
+          fontFamily: "'Playfair Display', serif",
           fontWeight: 700,
           fontSize: "2rem",
           color: "#241B19",
@@ -343,80 +357,153 @@ function BlogPageSideContent() {
 
 export default function Home() {
   return (
-    <div className="home-page">
-      {/* 1. Carousel at the top */}
-      <ImageCarousel />
+    <Suspense fallback={<div className="loading-fill-text">GALLE</div>}>
+      <div className="home-page">
+        {/* 1. Carousel at the top */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <ImageCarousel />
+        </motion.div>
 
-      {/* 2. Hero Section */}
-      <section style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: '3rem 1rem 2rem 1rem', textAlign: 'center',
-        background: 'linear-gradient(90deg, #fff7f0 0%, #f7ece6 100%)',
-        borderRadius: 24, margin: '2rem auto', maxWidth: 900, boxShadow: '0 4px 32px rgba(80,60,40,0.07)'
-      }}>
-        <h1 style={{ fontFamily: 'Playfair Display', fontWeight: 800, fontSize: '2.7rem', color: '#8B2E2E', marginBottom: 12 }}>
-          Discover Your Signature Scent
-        </h1>
-        <p style={{ fontSize: '1.25rem', color: '#412a1f', maxWidth: 700, margin: '0 auto 1.5rem auto', fontWeight: 400 }}>
-          Experience the transformative power of GALLE perfumes. Crafted with natural, safe, and cruelty-free ingredients for a new confident you.
-        </p>
-        <a href="/shop" style={{ background: '#8B2E2E', color: '#fff', padding: '0.9rem 2.2rem', borderRadius: 10, fontWeight: 700, fontSize: '1.15rem', textDecoration: 'none', boxShadow: '0 2px 8px rgba(80,60,40,0.10)' }}>Shop Now</a>
-      </section>
-
-      {/* 3. Features Grid (now horizontal slider) */}
-      <section style={{ maxWidth: 1200, margin: '2.5rem auto', padding: '0 1rem' }}>
-        <FeatureCardSlider />
-      </section>
-
-      {/* 4. Bestsellers Section */}
-      <section style={{ maxWidth: 1200, margin: '0 auto 3rem auto', padding: '0 1rem' }}>
-        <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#241B19', marginBottom: 24, textAlign: 'center' }}>
-          Bestsellers
-        </h2>
-        <div
-          className="bestseller-slider"
+        {/* 2. Hero Section */}
+        <motion.section
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 32,
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch',
-            paddingBottom: 8
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '3rem 1rem 2rem 1rem', textAlign: 'center',
+            background: 'linear-gradient(90deg, #fff7f0 0%, #f7ece6 100%)',
+            borderRadius: 24, margin: '2rem auto', maxWidth: 900, boxShadow: '0 4px 32px rgba(80,60,40,0.07)'
           }}
         >
-          <PerfumeCard title="GALLE WINSEN" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_2a9069f2.jpg?updatedAt=1751363008436" />
-          <PerfumeCard title="GALLE ADORE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_3ce2c1a8.jpg?updatedAt=1751363008373" />
-          <PerfumeCard title="GALLE ENTICE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.27_955a0e06.jpg?updatedAt=1751363008393" />
-          <PerfumeCard title="GALLE PIZZAZ" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_ac278abd.jpg?updatedAt=1751363008376" />
-        </div>
-      </section>
+          <h1 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2.7rem', color: '#8B2E2E', marginBottom: 12 }}>
+            Discover Your Signature Scent
+          </h1>
+          <p style={{ fontSize: '1.25rem', color: '#412a1f', maxWidth: 700, margin: '0 auto 1.5rem auto', fontWeight: 400 }}>
+            Experience the transformative power of GALLE perfumes. Crafted with natural, safe, and cruelty-free ingredients for a new confident you.
+          </p>
+          <SpotlightButton
+            as="a"
+            href="/shop"
+            style={{
+              background: '#8B2E2E',
+              color: '#fff',
+              padding: '0.9rem 2.2rem',
+              borderRadius: 10,
+              fontWeight: 700,
+              fontSize: '1.15rem',
+              textDecoration: 'none',
+              boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
+            }}
+          >
+            Shop Now
+          </SpotlightButton>
+        </motion.section>
 
-      {/* 5. Blog Carousel with side content */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 24, maxWidth: 1400, margin: '0 auto' }}>
-        {/* <BlogPageSideContent /> */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <BlogCarousel />
-        </div>
-        {/* <BlogPageSideContent /> */}
+        {/* 3. Features Grid (now horizontal slider) */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ maxWidth: 1200, margin: '2.5rem auto', padding: '0 1rem' }}
+        >
+          <FeatureCardSlider />
+        </motion.section>
+
+        {/* 4. Bestsellers Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ maxWidth: 1200, margin: '0 auto 3rem auto', padding: '0 1rem' }}
+        >
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '2rem', color: '#241B19', marginBottom: 24, textAlign: 'center' }}>
+            Bestsellers
+          </h2>
+          <div
+            className="bestseller-slider"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 32,
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              paddingBottom: 8
+            }}
+          >
+            <PerfumeCard title="GALLE WINSEN" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_2a9069f2.jpg?updatedAt=1751363008436" />
+            <PerfumeCard title="GALLE ADORE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_3ce2c1a8.jpg?updatedAt=1751363008373" />
+            <PerfumeCard title="GALLE ENTICE" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.27_955a0e06.jpg?updatedAt=1751363008393" />
+            <PerfumeCard title="GALLE PIZZAZ" img="https://ik.imagekit.io/garvchaudhary/WhatsApp%20Image%202025-06-22%20at%2017.14.26_ac278abd.jpg?updatedAt=1751363008376" />
+          </div>
+        </motion.section>
+
+        {/* 5. Blog Carousel with side content */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ display: 'flex', justifyContent: 'center', gap: 24, maxWidth: 1400, margin: '0 auto' }}
+        >
+          {/* <BlogPageSideContent /> */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <BlogCarousel />
+          </div>
+          {/* <BlogPageSideContent /> */}
+        </motion.div>
+
+        {/* 6. Testimonials Carousel */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ background: '#fff7f0', padding: '3rem 0', borderRadius: 24, margin: '0 auto 3rem auto', maxWidth: 1100, boxShadow: '0 2px 16px rgba(80,60,40,0.07)' }}
+        >
+          <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#8B2E2E', marginBottom: 24, textAlign: 'center' }}>
+            What Our Customers Say
+          </h2>
+          <TestimonialsCarousel />
+        </motion.section>
+
+        {/* 7. Call to Action */}
+        <motion.section
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ textAlign: 'center', margin: '3rem 0 2rem 0' }}
+        >
+          <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#241B19', marginBottom: 16 }}>
+            Ready to find your new signature scent?
+          </h2>
+          <SpotlightButton
+            as="a"
+            href="/shop"
+            style={{
+              background: '#8B2E2E',
+              color: '#fff',
+              padding: '1rem 2.5rem',
+              borderRadius: 12,
+              fontWeight: 700,
+              fontSize: '1.2rem',
+              textDecoration: 'none',
+              boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
+            }}
+          >
+            Shop All Perfumes
+          </SpotlightButton>
+        </motion.section>
       </div>
-
-      {/* 6. Testimonials Carousel */}
-      <section style={{ background: '#fff7f0', padding: '3rem 0', borderRadius: 24, margin: '0 auto 3rem auto', maxWidth: 1100, boxShadow: '0 2px 16px rgba(80,60,40,0.07)' }}>
-        <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#8B2E2E', marginBottom: 24, textAlign: 'center' }}>
-          What Our Customers Say
-        </h2>
-        <TestimonialsCarousel />
-      </section>
-
-      {/* 7. Call to Action */}
-      <section style={{ textAlign: 'center', margin: '3rem 0 2rem 0' }}>
-        <h2 style={{ fontFamily: 'Playfair Display', fontWeight: 700, fontSize: '2rem', color: '#241B19', marginBottom: 16 }}>
-          Ready to find your new signature scent?
-        </h2>
-        <a href="/shop" style={{ background: '#8B2E2E', color: '#fff', padding: '1rem 2.5rem', borderRadius: 12, fontWeight: 700, fontSize: '1.2rem', textDecoration: 'none', boxShadow: '0 2px 8px rgba(80,60,40,0.10)' }}>Shop All Perfumes</a>
-      </section>
-    </div>
+    </Suspense>
   );
 }
 

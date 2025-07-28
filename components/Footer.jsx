@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FaInstagram, FaFacebook, FaEnvelope } from "react-icons/fa";
+import { motion } from "framer-motion";
 import "./footer.css";
 
 export default function Footer() {
@@ -16,15 +17,19 @@ export default function Footer() {
   };
 
   return (
-    <footer className="galle-footer">
+    <motion.footer
+      className="galle-footer"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
       <div className="footer-main">
         {/* Section 1: Logo & Brand */}
         <div className="footer-section footer-logo-section">
           <img src="/galle-logo.svg" alt="GALLE Logo" className="footer-logo" />
-          <div>
-            <div className="footer-title">GALLE</div>
-            <div className="footer-tagline">For a New Confident You</div>
-          </div>
+
+            <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={134} height={34} style={{ objectFit: "contain", marginLeft: "-20px" }} />
+
         </div>
         {/* Section 2: Get in Touch */}
         <div className="footer-section">
@@ -76,6 +81,6 @@ export default function Footer() {
         <span>© {new Date().getFullYear()} GALLE. All rights reserved.</span>
         <span>Made with ❤️ in India</span>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useCart } from '@/components/CartContext';
 import { supabase } from '@/utils/supabaseClient';
 import countryCodes from '@/components/countryCodes.json'; // You need to create this file
@@ -157,6 +157,7 @@ export default function CheckoutPage() {
     };
 
     return (
+        <Suspense fallback={<div className="loading-fill-text">GALLE</div>}>
         <div>
             <div style={{ maxWidth: 600, margin: '2rem auto', padding: 24, background: '#fff', borderRadius: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.07)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -208,5 +209,6 @@ export default function CheckoutPage() {
                 </form>
             </div>
         </div>
+        </Suspense>
     );
 }

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { motion } from "framer-motion";
 import "../blog.css";
 
 const blogPosts = {
@@ -79,7 +80,14 @@ export default function BlogPostPage({ params }) {
     <main className="blog-post-page">
       <h1 className="blog-post-title">{post.title}</h1>
       <div className="blog-post-date">{post.date}</div>
-      <img src={post.image} alt={post.title} className="blog-post-img" />
+      <motion.img
+        src={post.image}
+        alt={post.title}
+        className="blog-post-img zoom-on-hover"
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      />
       <div className="blog-post-content">{post.content}</div>
     </main>
   );

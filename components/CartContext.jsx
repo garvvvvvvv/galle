@@ -81,6 +81,7 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [userId, setUserId] = useState(null);
   const [cartId, setCartId] = useState(null);
+  const [lastAdded, setLastAdded] = useState(null); // <-- Add this state
 
   // Utility: Enrich cart with full product data
   const enrichCartItems = (items) => {
@@ -277,7 +278,9 @@ export function CartProvider({ children }) {
       addToCart,
       removeFromCart,
       clearCart,
-      getCartTotal
+      getCartTotal,
+      lastAdded,      // <-- Provide lastAdded
+      setLastAdded    // <-- Provide setLastAdded
     }}>
       {children}
     </CartContext.Provider>

@@ -6,6 +6,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import styles from "./ImageCarousel.module.css";
 import React from "react";
+import { motion } from "framer-motion";
+
 const desktopImages = [
   "https://ik.imagekit.io/garvchaudhary/Untitled%20(1920%20x%20720%20px).png?updatedAt=1753594300719",
   "https://ik.imagekit.io/garvchaudhary/1.png?updatedAt=1753612536402",
@@ -57,9 +59,13 @@ export default function ImageCarousel() {
       >
         {images.map((src, i) => (
           <SwiperSlide key={i}>
-            <img
+            <motion.img
               src={src}
               alt={`Perfume ${i + 1}`}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="zoom-on-hover"
             />
           </SwiperSlide>
         ))}

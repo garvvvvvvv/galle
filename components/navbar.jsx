@@ -6,10 +6,12 @@ import { FaShoppingCart, FaSearch, FaBars } from 'react-icons/fa';
 import { supabase } from '@/utils/supabaseClient';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCart } from '@/components/CartContext';
-import { IoMdSearch } from "react-icons/io";
+import { IoMdSearch, IoMdClose } from "react-icons/io";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { GoPerson } from "react-icons/go";
 import products from '@/data/product';
+import { motion, AnimatePresence } from "framer-motion";
+import SpotlightButton from '@/components/SpotlightButton';
 
 // Use products from your actual product data
 const perfumes = products.map((p, idx) => ({
@@ -66,6 +68,17 @@ const Navbar = () => {
   // Hamburger menu close on any button click (mobile)
   const handleMobileMenuClick = () => setOpen(false);
 
+  // For closing menu when clicking outside
+  const menuRef = React.useRef();
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
   // Search logic (show only perfume products, not notes)
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -111,8 +124,11 @@ const Navbar = () => {
 
   return (
     <>
-      <nav
+      <motion.nav
         className='navbar-outer'
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
         style={{
           position: 'fixed',
           top: 0,
@@ -121,7 +137,6 @@ const Navbar = () => {
           zIndex: 1201,
           boxShadow: '0 2px 12px rgba(80,60,40,0.07)',
           background: '#ffeedc',
-          // Remove height here, use CSS for responsive height
         }}
       >
         {/* Desktop/tablet */}
@@ -136,7 +151,7 @@ const Navbar = () => {
             <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
             <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
           </ul>
-          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+          <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', position: 'relative' }}>
             <div className="search-bar-container">
               {/* Show only search icon, dropdown appears for both desktop and mobile */}
               <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
@@ -166,36 +181,56 @@ const Navbar = () => {
               height: 48,
               position: 'relative',
               color: '#241B19',
-              zIndex: 2 // ensure cart icon is above hamburger
+              zIndex: 2003 // <-- Increased zIndex so cart button is above hamburger
             }}>
-              <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19' }} />
-              {cartCount > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: -6,
-                  right: -10,
-                  background: '#A62639',
-                  color: '#fff',
-                  borderRadius: '50%',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  minWidth: 22,
-                  height: 22,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
-                }}>
-                  {cartCount}
-                </span>
-              )}
+              <motion.span
+                whileTap={{ scale: 1.18, rotate: [0, 12, -12, 0], backgroundColor: "#ffe5e5" }}
+                whileHover={{ scale: 1.09, rotate: 5, backgroundColor: "#fff7f0" }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                <LiaShoppingBagSolid style={{ width: 28, height: 28, color: '#241B19' }} />
+                {cartCount > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: -6,
+                    right: -10,
+                    background: '#A62639',
+                    color: '#fff',
+                    borderRadius: '50%',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    minWidth: 22,
+                    height: 22,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(80,60,40,0.10)'
+                  }}>
+                    {/* AnimateNumber removed, just show cartCount */}
+                    {cartCount}
+                  </span>
+                )}
+              </motion.span>
             </Link>
             {/* Hamburger hidden on desktop */}
-            <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
-              display: 'none'
-            }}>
+            <motion.button
+              className="hamburger"
+              aria-label="Menu"
+              onClick={() => setOpen(!open)}
+              whileTap={{ scale: 1.05, backgroundColor: "#f7ece6" }}
+              whileHover={{ scale: 1.08, backgroundColor: "#f7ece6" }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              style={{
+                display: 'none',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                zIndex: 2002
+              }}
+            >
               <FaBars size={28} color="#241B19" />
-            </button>
+            </motion.button>
           </div>
         </div>
         {/* Mobile */}
@@ -209,8 +244,9 @@ const Navbar = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '1rem',
-            position: 'relative'
-          }}>
+            position: 'relative',
+            justifyContent: 'flex-end'
+            }}>
             <button className="search-btn" aria-label="Search" onClick={handleSearchButtonClick} style={{ color: '#241B19', background: 'none', border: 'none', padding: 0 }}>
               <IoMdSearch style={{ width: 28, height: 28, color: '#241B19', strokeWidth: 1 }} />
             </button>
@@ -241,52 +277,122 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <button className="hamburger" aria-label="Menu" onClick={() => setOpen(!open)} style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              position: 'static', // not absolute
-              marginLeft: '0.5rem',
-              zIndex: 2
-            }}>
-              <FaBars size={28} color="#241B19" />
-            </button>
+            
+            
+            <motion.button
+              className="hamburger "
+              aria-label="Menu"
+              onClick={() => setOpen(!open)}
+              whileTap={{ scale: 1.05, backgroundColor: "linear-gradient(90deg,#ff0057,#fffd44,#00ffae)" }}
+              whileHover={{ scale: 1.08, backgroundColor: "linear-gradient(90deg,#ff0057,#fffd44,#00ffae)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                borderRadius: '50%',
+                boxShadow: open ? '0 2px 8px rgba(80,60,40,0.10)' : 'none',
+                transition: 'box-shadow 0.2s'
+              }}
+            >
+              {/* Only show cross or hamburger icon, not both */}
+              {open ? null : <FaBars size={28} color="#241B19" />}
+            </motion.button>
           </div>
         </div>
         {/* Mobile nav menu */}
-        {open && (
-          <div className="mobile-nav-menu">
-            <ul className="nav-links">
-              <li><Link href='/' onClick={handleMobileMenuClick}>HOME</Link></li>
-              <li><Link href='/shop' onClick={handleMobileMenuClick}>SHOP</Link></li>
-              <li><Link href='/about' onClick={handleMobileMenuClick}>ABOUT</Link></li>
-              <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
-              <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
-              <li>
+        <AnimatePresence>
+          {open && (
+            <>
+              <motion.div
+                key="mobile-nav-bg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100vw",
+                  height: "100vh",
+                  background: "#241B19",
+                  zIndex: 2000
+                }}
+                onClick={() => setOpen(false)}
+              />
+              <motion.div
+                key="mobile-nav-menu"
+                ref={menuRef}
+                className="mobile-nav-menu"
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", stiffness: 340, damping: 30 }}
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  right: 0,
+                  width: "80vw",
+                  maxWidth: 340,
+                  height: "100vh",
+                  background: "#fff7f0",
+                  zIndex: 2001,
+                  boxShadow: "-4px 0 24px rgba(80,60,40,0.13)",
+                  padding: "2.5rem 1.2rem 1.2rem 1.2rem",
+                  display: "flex",
+                  flexDirection: "column"
+                }}
+              >
+                {/* Only one cross button inside the menu */}
                 <button
-                  onClick={() => { router.push('/account'); handleMobileMenuClick(); }}
+                  aria-label="Close menu"
+                  onClick={() => setOpen(false)}
                   style={{
-                    background: 'transparent',
-                    border: 'none',
-                    padding: 0,
-                    textAlign: 'center',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer'
+                    background: "none",
+                    border: "none",
+                    fontSize: "2rem",
+                    color: "#8B2E2E",
+                    alignSelf: "flex-end",
+                    marginBottom: 18,
+                    cursor: "pointer"
                   }}
                 >
-                  <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} />
-                  <span>MY ACCOUNT</span>
+                  <IoMdClose />
                 </button>
-              </li>
-            </ul>
-          </div>
-        )}
+                <ul className="nav-links mobile-nav-links">
+                  <li><Link href='/' onClick={handleMobileMenuClick}>HOME</Link></li>
+                  <li><Link href='/shop' onClick={handleMobileMenuClick}>SHOP</Link></li>
+                  <li><Link href='/about' onClick={handleMobileMenuClick}>ABOUT</Link></li>
+                  <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
+                  <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
+                  <li>
+                    <button
+                      onClick={() => { router.push('/account'); handleMobileMenuClick(); }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        padding: 0,
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <GoPerson style={{ width: 28, height: 28, color: '#241B19', background: 'transparent' }} />
+                      <span>MY ACCOUNT</span>
+                    </button>
+                  </li>
+                </ul>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
         {/* Search expanded: show dropdown on both mobile and desktop */}
         {searchActive && (
           <div className="mobile-search-dropdown" style={{ position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 200 }}>
@@ -350,11 +456,11 @@ const Navbar = () => {
             </div>
           </div>
         )}
-      </nav>
+      </motion.nav>
       {/* Add this utility class to your main layout/page container (e.g. in _app.js, layout.js, or your main page component): */}
       {/* <div className="navbar-offset"> ...your page content... </div> */}
     </>
   );
 }
 
-export default Navbar
+export default Navbar;

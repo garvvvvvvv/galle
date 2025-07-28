@@ -19,7 +19,7 @@
 
 .perfumeName{
     font-weight: 500;
-    font-family: PlayfairDisplay;
+    font-family: 'Playfair Display', serif;
 }
 
 .perfumeDescription{
@@ -48,6 +48,13 @@
 
 .addToCartButton:hover{
     background-color: #3B2A25;
+}
+
+.zoom-on-hover {
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.zoom-on-hover:hover, .perfumeCard2:hover .zoom-on-hover {
+  transform: scale(1.045);
 }
 
 @media (max-width: 700px) {

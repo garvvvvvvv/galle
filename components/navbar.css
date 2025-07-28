@@ -7,7 +7,7 @@ nav {
 }
 
 h1 {
-  font-family: 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Playfair Display', serif;
 }
 
 .navbar {
@@ -76,13 +76,20 @@ h1 {
 .hamburger {
   display: none;
   flex-direction: column;
-  justify-content: space-around;
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
   border: none;
   cursor: pointer;
-  z-index: 1100;
+  border-radius: 50%;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.hamburger:active,
+.hamburger:hover {
+  background: #f7ece6;
+  box-shadow: 0 2px 8px rgba(80,60,40,0.10);
 }
 
 .logo img {
@@ -357,6 +364,8 @@ h1 {
   align-items: center;
   justify-content: flex-start;
   transition: top 0.2s;
+  right: 0; /* stick to right */
+  left: auto;
 }
 
 
@@ -368,6 +377,36 @@ h1 {
   font-size: 1rem;
   padding: 0;
   margin: 0;
+}
+
+/* Divider lines between mobile nav menu buttons */
+.mobile-nav-links > li {
+  width: 100%;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #e7d6c7;
+}
+.mobile-nav-links > li:last-child {
+  border-bottom: none;
+}
+
+/* Add spacing and hover effect for mobile nav links */
+.mobile-nav-links a,
+.mobile-nav-links button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.08rem;
+  color: #241B19;
+  background: none;
+  border: none;
+  padding: 0.3rem 0;
+  text-decoration: none;
+  transition: background 0.18s;
+}
+.mobile-nav-links a:hover,
+.mobile-nav-links button:hover {
+  background: #f7ece6;
 }
 
 .navbar-offset {
