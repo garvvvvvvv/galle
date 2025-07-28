@@ -218,6 +218,11 @@ function FeatureCardSlider() {
       desc: "Only the purest, safest botanicals."
     },
     {
+      icon: "ifra.svg",
+      title: "IFRA Certified",
+      desc: "Meets the highest safety standards."
+    },
+    {
       icon: "cruelty-free.svg",
       title: "Cruelty-Free",
       desc: "Never tested on animals."
@@ -232,11 +237,6 @@ function FeatureCardSlider() {
       title: "Paraben-Free",
       desc: "Gentle and safe for all skin types."
     },
-    {
-      icon: "silicone-free.svg",
-      title: "Silicone-Free",
-      desc: "Clean beauty, always."
-    }
   ];
 
   return (
@@ -287,7 +287,7 @@ function FeatureCardSlider() {
             <img
               src={f.icon}
               alt={f.title}
-              style={{ width: 48, height: 48, marginBottom: 10 }}
+              style={{ width: 48, height: 48, marginBottom: 10, color: "#8B2E2E", backgroundColor: "#fff" }}
             />
             <h3
               style={{
