@@ -1,9 +1,8 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import styles from "./ImageCarousel.module.css";
 import React from "react";
 import { motion } from "framer-motion";
@@ -45,17 +44,19 @@ function useMediaQuery(query) {
 export default function ImageCarousel() {
   const isDesktop = useMediaQuery("(min-width: 900px)");
   const images = isDesktop ? desktopImages : mobileImages;
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   return (
     <div className={styles.carouselWrapper}>
       <Swiper
-        modules={[Autoplay, Pagination, Navigation]}
+        modules={[Autoplay, Navigation]}
         autoplay={{ delay: 2000 }}
         loop={true}
-        pagination={{ clickable: true }}
         navigation={true}
         slidesPerView={1}
         className="mySwiper"
+        onSlideChange={swiper => setActiveIndex(swiper.realIndex)}
+        onAutoplay={swiper => setActiveIndex(swiper.realIndex)}
       >
         {images.map((src, i) => (
           <SwiperSlide key={i}>
@@ -70,6 +71,14 @@ export default function ImageCarousel() {
           </SwiperSlide>
         ))}
       </Swiper>
+      <div className={styles.barPagination}>
+        {images.map((_, i) => (
+          <div
+            key={i}
+            className={`${styles.bar} ${activeIndex === i ? styles.activeBar : ""}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

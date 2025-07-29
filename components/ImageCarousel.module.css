@@ -25,3 +25,23 @@
   z-index: 2;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
 }
+
+.barPagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.bar {
+  width: 32px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+.activeBar {
+  background: #222;
+}
