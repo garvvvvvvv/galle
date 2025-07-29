@@ -25,7 +25,7 @@ export default function Footer() {
     >
       <div className="footer-main">
         {/* Section 1: Logo & Brand */}
-        <div className="footer-section footer-logo-section">
+        <div className="footer-section2 footer-logo-section">
           <img src="/galle-logo.svg" alt="GALLE Logo" className="footer-logo" />
 
             <img src='/GALLE-WRITTENLOGO.png' alt='Galle Logo' width={134} height={34} style={{ objectFit: "contain", marginLeft: "-20px" }} />
