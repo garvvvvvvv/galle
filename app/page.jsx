@@ -220,7 +220,7 @@ function FeatureCardSlider() {
     {
       icon: "ifra.svg",
       title: "IFRA Certified",
-      desc: "Meets the highest safety standards."
+      desc: "International Fragrance Association Certified"
     },
     {
       icon: "cruelty-free.svg",
