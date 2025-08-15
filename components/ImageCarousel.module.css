@@ -42,6 +42,15 @@
   transition: background 0.3s;
 }
 
+/* Sleek and slim bars for mobile */
+@media (max-width: 899px) {
+  .bar {
+    width: 24px;
+    height: 1px;
+    border-radius: 2px;
+  }
+}
+
 .activeBar {
   background: #222;
 }
