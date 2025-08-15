@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext, createContext } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useCart } from './CartContext';
 
 // UserContext for global user state
 const UserContext = createContext();
@@ -25,11 +26,19 @@ export function UserProvider({ children }) {
       listener?.subscription.unsubscribe();
     };
   }, []);
+  // On mount, check for session and update user context
+  useEffect(() => {
+    const session = supabase.auth.getSession();
+    if (session) {
+      setUser(session.user);
+    }
+  }, []);
   return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 }
 
 export default function AccountPage() {
   const { user, setUser } = useUser();
+  const { clearCart } = useCart();
   const [orders, setOrders] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +86,8 @@ export default function AccountPage() {
       setError(error.message);
       toast.error(error.message);
     } else {
+      // Also update users table
+      await supabase.from('users').upsert([{ id: user.id, first_name: firstName, last_name: lastName, email: user.email }], { onConflict: 'id' });
       setEditName(false);
       toast.success('Name updated!');
       // Update user context with new metadata
@@ -90,6 +101,7 @@ export default function AccountPage() {
     if (error) {
       toast.error(error.message);
     } else {
+      clearCart(); // Clear cart on sign out
       setUser(null);
       router.push('/account');
     }
@@ -115,6 +127,34 @@ export default function AccountPage() {
       </button>
     </div>
   );
+
+  // Show loading spinner if redirecting
+  if (loading) return <div style={{ textAlign: 'center', padding: '2rem' }}><div className="spinner" style={{ margin: '0 auto', borderTopColor: '#8B2E2E' }} /></div>;
+
+  // If !user.email_confirmed, show guidance to verify email
+  if (!user.email_confirmed) {
+    return (
+      <div style={{ padding: 32, textAlign: 'center' }}>
+        <h2>Email Verification Required</h2>
+        <p>Please verify your email address to access your account.</p>
+        <button
+          onClick={() => router.push('/auth')}
+          style={{
+            background: '#8B2E2E',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 8,
+            padding: '10px 24px',
+            fontWeight: 600,
+            fontSize: '1rem',
+            cursor: 'pointer'
+          }}
+        >
+          Resend Verification Email
+        </button>
+      </div>
+    );
+  }
 
   return (
     <main aria-label="Account" style={{ maxWidth: 700, margin: '2rem auto', padding: 24, background: '#fff', borderRadius: 12 }}>

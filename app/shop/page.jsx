@@ -17,9 +17,9 @@ const Shop = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   // Handler for playful cart add
-  const handleAddToCart = (product, quantity = 1) => {
-    addToCart(product, quantity);
-    if (setLastAdded) setLastAdded({ product, quantity }); // Fix: check if setLastAdded exists
+  const handleAddToCart = async (product, quantity = 1) => {
+    await addToCart(product, quantity);
+    if (setLastAdded) setLastAdded({ product, quantity });
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 1800);
   };

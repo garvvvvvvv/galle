@@ -4,10 +4,18 @@ import countryCodes from './countryCodes.json';
 import { supabase } from '@/utils/supabaseClient';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useUser } from '../components/AccountPage';
+import { upsertUserProfile } from './CartContext';
 
 export default function AuthForm({ onAuth }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const { setUser } = useUser();
+
+  // Password reset state
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   // react-hook-form for validation
   const {
@@ -94,11 +102,27 @@ export default function AuthForm({ onAuth }) {
           return;
         }
         toast.success('Signed in successfully!');
+        setUser(data.user); // Set user in global state
         if (onAuth) onAuth(data.user);
         reset();
       }
     } catch (err) {
       toast.error(err.message || 'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Password reset handler
+  const handlePasswordReset = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail);
+      if (error) throw error;
+      setResetSent(true);
+      toast.success('Password reset email sent!');
+    } catch (err) {
+      toast.error(err.message || 'Failed to send reset email');
     } finally {
       setLoading(false);
     }
@@ -186,7 +210,34 @@ export default function AuthForm({ onAuth }) {
         >
           {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
         </button>
+        <button
+          type="button"
+          onClick={() => setShowReset(true)}
+          style={{ background: 'none', border: 'none', color: '#8B2E2E', cursor: 'pointer', fontWeight: 600, fontSize: '1rem', marginTop: 8 }}
+          aria-label="Forgot Password"
+        >
+          Forgot Password?
+        </button>
       </form>
+      {showReset && (
+        <div style={{ marginTop: 16 }}>
+          <input
+            value={resetEmail}
+            onChange={e => setResetEmail(e.target.value)}
+            placeholder="Enter your email"
+            aria-label="Reset Email"
+            style={{ padding: 12, borderRadius: 8, border: '1px solid #d2beab', fontSize: '1rem', width: '100%', marginBottom: 8 }}
+          />
+          <button
+            onClick={handlePasswordReset}
+            style={{ background: '#8B2E2E', color: '#fff', border: 'none', borderRadius: 8, padding: '12px 0', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', width: '100%' }}
+            disabled={loading}
+          >
+            {loading ? 'Sending...' : 'Send Reset Email'}
+          </button>
+          {resetSent && <div style={{ color: 'green', marginTop: 8 }}>Check your email for reset instructions.</div>}
+        </div>
+      )}
       <div style={{ textAlign: 'center', marginTop: 20 }}>
         <button
           type="button"

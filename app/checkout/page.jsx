@@ -5,6 +5,7 @@ import { supabase } from '@/utils/supabaseClient';
 import countryCodes from '@/components/countryCodes.json'; // You need to create this file
 import Link from 'next/link';
 import { FaShoppingCart } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export default function CheckoutPage() {
     const { cart, clearCart } = useCart();
@@ -132,6 +133,7 @@ export default function CheckoutPage() {
                         if (!emailData.success) throw new Error(emailData.error || 'Email failed');
                         setSuccess(true);
                         clearCart();
+                        toast.success('Order placed!');
                     } catch (err) {
                         setError('Order placed but email failed: ' + (err.message || ''));
                     }
@@ -151,6 +153,7 @@ export default function CheckoutPage() {
             }
         } catch (err) {
             setError(err.message || 'Checkout failed');
+            toast.error(err.message || 'Checkout failed');
         } finally {
             setLoading(false);
         }

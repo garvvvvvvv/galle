@@ -7,6 +7,7 @@ import { useCart } from './CartContext';
 import { motion } from "framer-motion";
 import * as Toast from '@radix-ui/react-toast';
 import { SpotlightButton } from './SpotlightButton'; // Adjust the import path as necessary
+import { toast } from 'react-toastify';
 
 const PerfumeCard2 = ({
   title,
@@ -39,10 +40,11 @@ const PerfumeCard2 = ({
     notes
   };
 
-  const handleAddToCart = () => {
-    addToCart(product, 1);
+  const handleAddToCart = async () => {
+    await addToCart(product, 1);
     setShowPopup(true);
     setToastOpen(true);
+    toast.success('Added to cart!');
     setTimeout(() => setShowPopup(false), 1200);
   };
 
@@ -99,11 +101,11 @@ const PerfumeCard2 = ({
               <Link href={readMoreLink} className="readMoreButton2">Read More</Link>
               <SpotlightButton
                 className="addToCartButton2"
-                onClick={() => {
+                onClick={async () => {
                   if (onAddToCart) {
-                    onAddToCart(product);
+                    await onAddToCart(product);
                   } else {
-                    handleAddToCart();
+                    await handleAddToCart();
                   }
                 }}
                 style={{ marginLeft: 8 }}

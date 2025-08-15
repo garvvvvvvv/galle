@@ -1,81 +1,10 @@
-// "use client";
-// import React, { createContext, useContext, useState, useEffect } from 'react';
-// import { supabase } from '@/utils/supabaseClient';
-
-// const CartContext = createContext();
-
-// export function CartProvider({ children }) {
-//   const [cart, setCart] = useState([]);
-//   const [userId, setUserId] = useState(null);
-
-//   // Load cart from localStorage or Supabase on mount
-//   useEffect(() => {
-//     async function fetchUser() {
-//       const { data } = await supabase.auth.getUser();
-//       setUserId(data?.user?.id || null);
-//       if (data?.user?.id) {
-//         // Load cart from Supabase users table (column: cart_items, type: jsonb)
-//         const { data: userData } = await supabase.from('users').select('cart_items').eq('id', data.user.id).single();
-//         if (userData?.cart_items) setCart(userData.cart_items);
-//       } else {
-//         // Load cart from localStorage
-//         const localCart = localStorage.getItem('galle_cart');
-//         if (localCart) setCart(JSON.parse(localCart));
-//       }
-//     }
-//     fetchUser();
-//   }, []);
-
-//   // Save cart to localStorage or Supabase on change
-//   useEffect(() => {
-//     if (userId) {
-//       supabase.from('users').update({ cart_items: cart }).eq('id', userId);
-//     } else {
-//       localStorage.setItem('galle_cart', JSON.stringify(cart));
-//     }
-//   }, [cart, userId]);
-
-//   // Add item to cart (if exists, update quantity)
-//   const addToCart = (product, quantity = 1) => {
-//     setCart(prev => {
-//       const idx = prev.findIndex(item => item.slug === product.slug);
-//       if (idx > -1) {
-//         // Update quantity
-//         const updated = [...prev];
-//         updated[idx].quantity += quantity;
-//         return updated;
-//       }
-//       return [...prev, { ...product, quantity }];
-//     });
-//   };
-
-//   // Remove item
-//   const removeFromCart = slug => {
-//     setCart(prev => prev.filter(item => item.slug !== slug));
-//   };
-
-//   // Clear cart
-//   const clearCart = () => setCart([]);
-
-//   return (
-//     <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
-//       {children}
-//     </CartContext.Provider>
-//   );
-// }
-
-// export function useCart() {
-//   return useContext(CartContext);
-// }
-
-
-
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 import products from '../data/product';
 import { useUser } from '../components/AccountPage'; // <-- Use global user context
 import { toast } from 'react-toastify';
+import { useRouter } from "next/router";
 
 const CartContext = createContext();
 
@@ -124,49 +53,98 @@ export function CartProvider({ children }) {
 
       setUserId(user.id);
 
-      // Find or create cart row
-      const { data: cartRow } = await supabase
-        .from("carts")
-        .select("id")
-        .eq("user_id", user.id)
-        .single();
+      // Only fetch if user.id exists
+      if (!user.id) return;
 
-      let cart_id = cartRow?.id;
-      if (!cart_id) {
-        const { data: newCart } = await supabase
+      // Find or create cart row
+      let cart_id;
+      let cartRow;
+      try {
+        const { data: cartRowData, error: cartRowError } = await supabase
           .from("carts")
-          .insert({ user_id: user.id })
-          .select()
+          .select("id")
+          .eq("user_id", user.id)
           .single();
-        cart_id = newCart?.id;
+        cartRow = cartRowData;
+        if (cartRowError && cartRowError.code !== "PGRST116") {
+          // Ignore "No rows found" error, handle others
+          console.error(cartRowError);
+        }
+      } catch (e) {
+        console.error("Error fetching cart row:", e);
+      }
+
+      cart_id = cartRow?.id;
+      if (!cart_id) {
+        // Only insert if not exists
+        try {
+          const { data: newCart, error: newCartError } = await supabase
+            .from("carts")
+            .insert({ user_id: user.id })
+            .select()
+            .single();
+          if (newCartError && newCartError.code !== "PGRST116") {
+            // Ignore "duplicate key" error, handle others
+            console.error(newCartError);
+          }
+          cart_id = newCart?.id;
+        } catch (e) {
+          console.error("Error inserting cart row:", e);
+        }
+      }
+
+      if (!cart_id) {
+        setCartId(null);
+        setCart([]);
+        return;
       }
 
       setCartId(cart_id);
 
-      // Fetch cart_items
-      const { data: items } = await supabase
-        .from("cart_items")
-        .select("id, slug, quantity")
-        .eq("cart_id", cart_id);
+      // Fetch cart_items only if cart_id is valid
+      let items = [];
+      try {
+        const { data: itemsData, error: itemsError } = await supabase
+          .from("cart_items")
+          .select("id, slug, quantity")
+          .eq("cart_id", cart_id);
+        if (itemsError) {
+          console.error(itemsError);
+        }
+        items = itemsData;
+      } catch (e) {
+        console.error("Error fetching cart items:", e);
+      }
 
       // If localStorage has items, migrate them to Supabase
       const localCart = localStorage.getItem("galle_cart");
       if (localCart && items && items.length === 0) {
         const parsed = JSON.parse(localCart);
         for (const item of parsed) {
-          await supabase.from("cart_items").insert({
-            cart_id: cart_id,
-            slug: item.slug,
-            quantity: item.quantity,
-          });
+          try {
+            await supabase.from("cart_items").insert({
+              cart_id: cart_id,
+              slug: item.slug,
+              quantity: item.quantity,
+            });
+          } catch (e) {
+            console.error("Error migrating cart item:", e);
+          }
         }
         localStorage.removeItem("galle_cart");
         // Reload items
-        const { data: migratedItems } = await supabase
-          .from("cart_items")
-          .select("id, slug, quantity")
-          .eq("cart_id", cart_id);
-        setCart(enrichCartItems(migratedItems));
+        try {
+          const { data: migratedItems, error: migratedItemsError } = await supabase
+            .from("cart_items")
+            .select("id, slug, quantity")
+            .eq("cart_id", cart_id);
+          if (migratedItemsError) {
+            console.error(migratedItemsError);
+          }
+          setCart(enrichCartItems(migratedItems));
+        } catch (e) {
+          console.error("Error fetching migrated cart items:", e);
+        }
       } else {
         setCart(enrichCartItems(items));
       }
@@ -349,3 +327,35 @@ export async function upsertUserProfile({ supabase, user, profile }) {
 }
 
 
+function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      console.log("Current hash:", hash);
+      if (
+        hash &&
+        hash.includes("type=recovery") &&
+        !window.location.pathname.startsWith("/reset-password")
+      ) {
+        const params = new URLSearchParams(hash.replace(/^#/, ""));
+        const access_token = params.get("access_token");
+        console.log("Extracted access_token:", access_token);
+        window.location.hash = "";
+        if (access_token) {
+          router.replace({
+            pathname: "/reset-password",
+            query: { access_token }
+          });
+        } else {
+          router.replace("/reset-password?error=missing_token");
+        }
+      }
+    }
+  }, [router]);
+
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
