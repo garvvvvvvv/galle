@@ -150,6 +150,7 @@ const Navbar = () => {
             <li><Link href='/about' onClick={handleLinkClick}>ABOUT</Link></li>
             <li><Link href='/contact' onClick={handleLinkClick}>CONTACT US</Link></li>
             <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
+            <li><Link href="/gifting" onClick={handleLinkClick}>Gifting</Link></li>
           </ul>
           <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', position: 'relative' }}>
             <div className="search-bar-container">
@@ -370,6 +371,7 @@ const Navbar = () => {
                   <li><Link href='/about' onClick={handleMobileMenuClick}>ABOUT</Link></li>
                   <li><Link href='/contact' onClick={handleMobileMenuClick}>CONTACT US</Link></li>
                   <li><Link href='/track-order' onClick={handleMobileMenuClick}>TRACK MY ORDER</Link></li>
+                  <li><Link href="/gifting" onClick={handleMobileMenuClick}>Gifting</Link></li>
                   <li>
                     <button
                       onClick={() => { router.push('/account'); handleMobileMenuClick(); }}

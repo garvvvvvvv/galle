@@ -62,11 +62,12 @@ export default function AuthForm({ onAuth }) {
           return;
         }
         // Profile upsert
-        if (signUpData.user) {
+        const userId = signUpData?.user?.id;
+        if (userId) {
           await supabase
             .from('users')
             .upsert([{
-              id: signUpData.user.id,
+              id: userId, // Use Auth user id!
               email: form.email,
               first_name: form.first_name,
               last_name: form.last_name,

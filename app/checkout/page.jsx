@@ -71,9 +71,10 @@ export default function CheckoutPage() {
                 handler: async function (response) {
                     // 3. Ensure user is signed in and profile is up-to-date
                     const { data: { user }, error: userError } = await supabase.auth.getUser();
-                    if (userError || !user) {
+                    if (userError || !user || !user.id) {
                       setError("You're not signed in. Please sign in to place an order.");
                       setLoading(false);
+                      console.error('User fetch error or missing user:', userError);
                       return;
                     }
 
@@ -113,6 +114,7 @@ export default function CheckoutPage() {
                     const { error: orderError } = await supabase.from('orders').insert([orderPayload]);
                     if (orderError) {
                       setError('Order saved but failed to save in database: ' + orderError.message);
+                      console.error('Order insert error:', orderError);
                     }
                     // 4. Send order confirmation email
                     try {
@@ -136,6 +138,7 @@ export default function CheckoutPage() {
                         toast.success('Order placed!');
                     } catch (err) {
                         setError('Order placed but email failed: ' + (err.message || ''));
+                        console.error('Order email error:', err);
                     }
                 },
                 prefill: {
@@ -154,6 +157,7 @@ export default function CheckoutPage() {
         } catch (err) {
             setError(err.message || 'Checkout failed');
             toast.error(err.message || 'Checkout failed');
+            console.error('Checkout error:', err);
         } finally {
             setLoading(false);
         }

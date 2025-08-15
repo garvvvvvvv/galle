@@ -106,10 +106,17 @@ export function CartProvider({ children }) {
   useEffect(() => {
     let ignore = false;
     async function fetchCart() {
-      const { data: authData } = await supabase.auth.getUser();
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Supabase auth error:', authError);
+        setUserId(null);
+        setCartId(null);
+        setCart([]);
+        return;
+      }
       const user = authData?.user;
 
-      if (!user) {
+      if (!user || !user.id) {
         setUserId(null);
         setCartId(null);
         // Guest user – localStorage
@@ -125,48 +132,107 @@ export function CartProvider({ children }) {
       setUserId(user.id);
 
       // Find or create cart row
-      const { data: cartRow } = await supabase
-        .from("carts")
-        .select("id")
-        .eq("user_id", user.id)
-        .single();
-
-      let cart_id = cartRow?.id;
-      if (!cart_id) {
-        const { data: newCart } = await supabase
+      let cart_id;
+      let cartRow;
+      try {
+        const { data: cartRowData, error: cartRowError, status } = await supabase
           .from("carts")
-          .insert({ user_id: user.id })
-          .select()
+          .select("id")
+          .eq("user_id", user.id)
           .single();
-        cart_id = newCart?.id;
+        cartRow = cartRowData;
+        if (cartRowError && cartRowError.code !== "PGRST116") {
+          console.error("Cart row error:", cartRowError, "Status:", status);
+        }
+      } catch (e) {
+        console.error("Error fetching cart row:", e);
+      }
+
+      cart_id = cartRow?.id;
+      if (!cart_id) {
+        // Only insert if not exists
+        try {
+          const { data: newCart, error: newCartError, status } = await supabase
+            .from("carts")
+            .insert({ user_id: user.id })
+            .select()
+            .single();
+          if (newCartError) {
+            if (newCartError.code === "23505" || status === 409) {
+              // Duplicate key, fetch the existing cart
+              const { data: existingCart } = await supabase
+                .from("carts")
+                .select("id")
+                .eq("user_id", user.id)
+                .single();
+              cart_id = existingCart?.id;
+            } else {
+              console.error("Insert cart error:", newCartError, "Status:", status);
+            }
+          } else {
+            cart_id = newCart?.id;
+          }
+        } catch (e) {
+          console.error("Error inserting cart row:", e);
+        }
+      }
+
+      if (!cart_id) {
+        setCartId(null);
+        setCart([]);
+        return;
       }
 
       setCartId(cart_id);
 
-      // Fetch cart_items
-      const { data: items } = await supabase
-        .from("cart_items")
-        .select("id, slug, quantity")
-        .eq("cart_id", cart_id);
+      // Fetch cart_items only if cart_id is valid
+      let items = [];
+      if (cart_id) {
+        try {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from("cart_items")
+            .select("id, slug, quantity")
+            .eq("cart_id", cart_id);
+          if (itemsError) {
+            console.error("Cart items error:", itemsError);
+          }
+          items = itemsData;
+        } catch (e) {
+          console.error("Error fetching cart items:", e);
+        }
+      } else {
+        console.warn("No cart_id available for fetching cart items.");
+      }
 
       // If localStorage has items, migrate them to Supabase
       const localCart = localStorage.getItem("galle_cart");
-      if (localCart && items && items.length === 0) {
+      if (localCart && items && items.length === 0 && cart_id) {
         const parsed = JSON.parse(localCart);
         for (const item of parsed) {
-          await supabase.from("cart_items").insert({
-            cart_id: cart_id,
-            slug: item.slug,
-            quantity: item.quantity,
-          });
+          try {
+            await supabase.from("cart_items").insert({
+              cart_id: cart_id,
+              slug: item.slug,
+              quantity: item.quantity,
+            });
+          } catch (e) {
+            console.error("Error migrating cart item:", e);
+          }
         }
         localStorage.removeItem("galle_cart");
         // Reload items
-        const { data: migratedItems } = await supabase
-          .from("cart_items")
-          .select("id, slug, quantity")
-          .eq("cart_id", cart_id);
-        setCart(enrichCartItems(migratedItems));
+        try {
+          const { data: migratedItems, error: migratedItemsError } = await supabase
+            .from("cart_items")
+            .select("id, slug, quantity")
+            .eq("cart_id", cart_id);
+          if (migratedItemsError) {
+            console.error("Migrated items error:", migratedItemsError);
+          }
+          setCart(enrichCartItems(migratedItems));
+        } catch (e) {
+          console.error("Error fetching migrated cart items:", e);
+        }
       } else {
         setCart(enrichCartItems(items));
       }
@@ -210,6 +276,10 @@ export function CartProvider({ children }) {
 
     try {
       if (userId && cartId) {
+        if (!userId || !cartId) {
+          toast.error('User or cart not ready. Please try again.');
+          return;
+        }
         if (existing) {
           const newQty = existing.quantity + quantity;
           await supabase
@@ -225,11 +295,13 @@ export function CartProvider({ children }) {
         }
 
         // Refresh cart
-        const { data: items } = await supabase
+        const { data: items, error: itemsError } = await supabase
           .from("cart_items")
           .select("id, slug, quantity")
           .eq("cart_id", cartId);
-
+        if (itemsError) {
+          console.error('Cart items fetch error:', itemsError);
+        }
         setCart(enrichCartItems(items));
         toast.success('Added to cart!');
       } else {
@@ -246,23 +318,30 @@ export function CartProvider({ children }) {
       }
     } catch (err) {
       toast.error('Failed to add to cart');
+      console.error('Add to cart error:', err);
     }
   };
 
   const removeFromCart = async (slug, itemId) => {
     try {
       if (userId && cartId) {
+        if (!userId || !cartId) {
+          toast.error('User or cart not ready. Please try again.');
+          return;
+        }
         if (itemId) {
           await supabase
             .from("cart_items")
             .delete()
             .eq("id", itemId);
         }
-        const { data: items } = await supabase
+        const { data: items, error: itemsError } = await supabase
           .from("cart_items")
           .select("id, slug, quantity")
           .eq("cart_id", cartId);
-
+        if (itemsError) {
+          console.error('Cart items fetch error:', itemsError);
+        }
         setCart(enrichCartItems(items));
         toast.info('Removed from cart');
       } else {
@@ -270,21 +349,31 @@ export function CartProvider({ children }) {
       }
     } catch (err) {
       toast.error('Failed to remove from cart');
+      console.error('Remove from cart error:', err);
     }
   };
 
   const clearCart = async () => {
-    if (userId && cartId) {
-      await supabase
-        .from("cart_items")
-        .delete()
-        .eq("cart_id", cartId);
-      setCart([]);
-    } else {
-      setCart([]);
-      localStorage.removeItem("galle_cart");
+    try {
+      if (userId && cartId) {
+        if (!userId || !cartId) {
+          toast.error('User or cart not ready. Please try again.');
+          return;
+        }
+        await supabase
+          .from("cart_items")
+          .delete()
+          .eq("cart_id", cartId);
+        setCart([]);
+      } else {
+        setCart([]);
+        localStorage.removeItem("galle_cart");
+      }
+      toast.info('Cart cleared');
+    } catch (err) {
+      toast.error('Failed to clear cart');
+      console.error('Clear cart error:', err);
     }
-    toast.info('Cart cleared');
   };
 
   // Calculate total price of cart

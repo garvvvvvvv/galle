@@ -16,7 +16,12 @@ export function UserProvider({ children }) {
   useEffect(() => {
     let ignore = false;
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error('Supabase getUser error:', error);
+        if (!ignore) setUser(null);
+        return;
+      }
       if (!ignore) setUser(data?.user || null);
     };
     getUser();
@@ -28,10 +33,15 @@ export function UserProvider({ children }) {
   }, []);
   // On mount, check for session and update user context
   useEffect(() => {
-    const session = supabase.auth.getSession();
-    if (session) {
-      setUser(session.user);
-    }
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        console.error('Supabase getSession error:', error);
+        return;
+      }
+      if (data?.session?.user) {
+        setUser(data.session.user);
+      }
+    });
   }, []);
   return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 }
@@ -130,31 +140,6 @@ export default function AccountPage() {
 
   // Show loading spinner if redirecting
   if (loading) return <div style={{ textAlign: 'center', padding: '2rem' }}><div className="spinner" style={{ margin: '0 auto', borderTopColor: '#8B2E2E' }} /></div>;
-
-  // If !user.email_confirmed, show guidance to verify email
-  if (!user.email_confirmed) {
-    return (
-      <div style={{ padding: 32, textAlign: 'center' }}>
-        <h2>Email Verification Required</h2>
-        <p>Please verify your email address to access your account.</p>
-        <button
-          onClick={() => router.push('/auth')}
-          style={{
-            background: '#8B2E2E',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            padding: '10px 24px',
-            fontWeight: 600,
-            fontSize: '1rem',
-            cursor: 'pointer'
-          }}
-        >
-          Resend Verification Email
-        </button>
-      </div>
-    );
-  }
 
   return (
     <main aria-label="Account" style={{ maxWidth: 700, margin: '2rem auto', padding: 24, background: '#fff', borderRadius: 12 }}>

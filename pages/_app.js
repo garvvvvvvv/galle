@@ -60,15 +60,14 @@ export function CartProvider({ children }) {
       let cart_id;
       let cartRow;
       try {
-        const { data: cartRowData, error: cartRowError } = await supabase
+        const { data: cartRowData, error: cartRowError, status } = await supabase
           .from("carts")
           .select("id")
           .eq("user_id", user.id)
           .single();
         cartRow = cartRowData;
         if (cartRowError && cartRowError.code !== "PGRST116") {
-          // Ignore "No rows found" error, handle others
-          console.error(cartRowError);
+          console.error("Cart row error:", cartRowError, "Status:", status);
         }
       } catch (e) {
         console.error("Error fetching cart row:", e);
@@ -78,16 +77,26 @@ export function CartProvider({ children }) {
       if (!cart_id) {
         // Only insert if not exists
         try {
-          const { data: newCart, error: newCartError } = await supabase
+          const { data: newCart, error: newCartError, status } = await supabase
             .from("carts")
             .insert({ user_id: user.id })
             .select()
             .single();
-          if (newCartError && newCartError.code !== "PGRST116") {
-            // Ignore "duplicate key" error, handle others
-            console.error(newCartError);
+          if (newCartError) {
+            if (newCartError.code === "23505" || status === 409) {
+              // Duplicate key, fetch the existing cart
+              const { data: existingCart } = await supabase
+                .from("carts")
+                .select("id")
+                .eq("user_id", user.id)
+                .single();
+              cart_id = existingCart?.id;
+            } else {
+              console.error("Insert cart error:", newCartError, "Status:", status);
+            }
+          } else {
+            cart_id = newCart?.id;
           }
-          cart_id = newCart?.id;
         } catch (e) {
           console.error("Error inserting cart row:", e);
         }
@@ -103,22 +112,26 @@ export function CartProvider({ children }) {
 
       // Fetch cart_items only if cart_id is valid
       let items = [];
-      try {
-        const { data: itemsData, error: itemsError } = await supabase
-          .from("cart_items")
-          .select("id, slug, quantity")
-          .eq("cart_id", cart_id);
-        if (itemsError) {
-          console.error(itemsError);
+      if (cart_id) {
+        try {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from("cart_items")
+            .select("id, slug, quantity")
+            .eq("cart_id", cart_id);
+          if (itemsError) {
+            console.error("Cart items error:", itemsError);
+          }
+          items = itemsData;
+        } catch (e) {
+          console.error("Error fetching cart items:", e);
         }
-        items = itemsData;
-      } catch (e) {
-        console.error("Error fetching cart items:", e);
+      } else {
+        console.warn("No cart_id available for fetching cart items.");
       }
 
       // If localStorage has items, migrate them to Supabase
       const localCart = localStorage.getItem("galle_cart");
-      if (localCart && items && items.length === 0) {
+      if (localCart && items && items.length === 0 && cart_id) {
         const parsed = JSON.parse(localCart);
         for (const item of parsed) {
           try {
@@ -139,7 +152,7 @@ export function CartProvider({ children }) {
             .select("id, slug, quantity")
             .eq("cart_id", cart_id);
           if (migratedItemsError) {
-            console.error(migratedItemsError);
+            console.error("Migrated items error:", migratedItemsError);
           }
           setCart(enrichCartItems(migratedItems));
         } catch (e) {
@@ -342,18 +355,15 @@ function MyApp({ Component, pageProps }) {
         const params = new URLSearchParams(hash.replace(/^#/, ""));
         const access_token = params.get("access_token");
         console.log("Extracted access_token:", access_token);
-        window.location.hash = "";
+        // Use window.location.replace for immediate navigation
         if (access_token) {
-          router.replace({
-            pathname: "/reset-password",
-            query: { access_token }
-          });
+          window.location.replace(`/reset-password?access_token=${access_token}`);
         } else {
-          router.replace("/reset-password?error=missing_token");
+          window.location.replace("/reset-password?error=missing_token");
         }
       }
     }
-  }, [router]);
+  }, []);
 
   return <Component {...pageProps} />;
 }

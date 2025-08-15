@@ -55,20 +55,24 @@ const SignupModal = () => {
     });
     if (signUpError) {
       alert('Signup failed: ' + signUpError.message);
+      console.error('Signup error:', signUpError);
       return;
     }
     // 2. Save user info to users table and subscribers table
     let userId = signUpData?.user?.id;
     if (!userId) {
       // Try to get user from session if not returned immediately
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error('Session fetch error:', sessionError);
+      }
       userId = sessionData?.session?.user?.id;
     }
     if (userId) {
       // Save to users table (upsert to avoid unique constraint errors)
       const { error: userTableError } = await supabase.from('users').upsert([
         {
-          id: userId,
+          id: userId, // Use Auth user id!
           email: form.email,
           first_name: form.first_name,
           last_name: form.last_name,
@@ -98,6 +102,10 @@ const SignupModal = () => {
         console.error('Debug: Subscriber save failed:', subTableError);
         return;
       }
+    } else {
+      alert('Signup failed: Could not get user id from Supabase Auth.');
+      console.error('No userId after signup');
+      return;
     }
     setSubmitted(true);
     alert('Thank you! Please check your email to confirm your account.');
